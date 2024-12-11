@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Roles } from './roles.entity';
 
 @Entity('tbl_Usuarios')
 export class Usuario {
@@ -11,6 +12,12 @@ export class Usuario {
   @Column()
   contraseña: string;
 
+  @Column()
+  id_rol: number;
   @Column({ default: 1 })
   estado: number;
+
+  @ManyToOne(() => Roles, (roles) => roles.id)
+  @JoinColumn({ name: 'id_rol' })
+  rol: Roles;
 }

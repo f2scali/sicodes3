@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateUsuarioDTO {
   @IsNotEmpty({ message: 'El campo cedula es requerido' })
   @IsNumber()
-  id_Cedula: number;
+  id: number;
 
   @IsNotEmpty({ message: 'El usuario es requerido' })
   @IsString()
@@ -12,4 +12,8 @@ export class CreateUsuarioDTO {
   @IsNotEmpty({ message: 'La contraseña es requerida' })
   @IsString()
   contraseña: string;
+
+  @IsNotEmpty({ message: 'Es necesario especificar el rol' })
+  @IsNumber()
+  id_rol: number;
 }
