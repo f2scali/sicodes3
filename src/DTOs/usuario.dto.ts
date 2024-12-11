@@ -1,12 +1,15 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Validate } from 'class-validator';
+import { IsUnique } from 'src/validators/isUnique-validator';
 
 export class CreateUsuarioDTO {
   @IsNotEmpty({ message: 'El campo cedula es requerido' })
   @IsNumber()
+  @Validate(IsUnique, ['Usuario', 'id'])
   id: number;
 
   @IsNotEmpty({ message: 'El usuario es requerido' })
   @IsString()
+  @Validate(IsUnique, ['Usuario', 'usuario'])
   usuario: string;
 
   @IsNotEmpty({ message: 'La contraseña es requerida' })

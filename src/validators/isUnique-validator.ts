@@ -9,6 +9,7 @@ import { EntityManager } from 'typeorm';
 const fieldName: Record<string, string> = {
   ID_ITEM: 'El ID del producto',
   NIT: 'El NIT',
+  usuario: 'El usuario',
 };
 @ValidatorConstraint({ name: 'IsUniqueConstraint', async: true })
 @Injectable()

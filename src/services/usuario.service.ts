@@ -33,18 +33,10 @@ export class UsuariosServices {
     return this.usuariosRepository.findOneBy({ id });
   }
 
+  findByUsername(usuario: string): Promise<Usuario | undefined> {
+    return this.usuariosRepository.findOneBy({ usuario });
+  }
   async createUsuario(data: Partial<Usuario>): Promise<Usuario> {
-    const usuarioExistente = await this.usuariosRepository.findOneBy({
-      id: data.id,
-    });
-
-    if (usuarioExistente) {
-      throw new HttpException(
-        `El usuario ${data.id} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     const newUsuario = this.usuariosRepository.create(data);
     return this.usuariosRepository.save(newUsuario);
   }
