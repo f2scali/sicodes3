@@ -7,5 +7,5 @@ export class SignInDTO {
 
   @IsNotEmpty({ message: 'La contraseña es requerida' })
   @IsString()
-  pass: string;
+  contraseña: string;
 }
