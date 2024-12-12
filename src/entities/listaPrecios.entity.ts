@@ -2,8 +2,11 @@ import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('tbl_Lista_Precios')
 export class ListaPrecios {
-  @PrimaryColumn()
-  ID_LISTA: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  codLista: string;
 
   @Column()
   DETALLE: string;

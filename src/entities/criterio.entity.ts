@@ -4,15 +4,16 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  Generated,
-  PrimaryColumn,
 } from 'typeorm';
 import { TipoInventario } from './tipoInventario.entity';
 
 @Entity('tbl_Criterio')
 export class Criterio {
-  @PrimaryColumn()
-  ID: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  codCriterio: string;
   @Column()
   Detalle: string;
 
@@ -22,7 +23,7 @@ export class Criterio {
   @Column({ default: 1 })
   estado: number;
 
-  @ManyToOne(() => TipoInventario, (tipo) => tipo.ID)
+  @ManyToOne(() => TipoInventario, (tipo) => tipo.id)
   @JoinColumn({ name: 'id_tipo_inv' })
   tipoInventario: TipoInventario;
 }

@@ -1,12 +1,21 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Vendedor } from './vendedor.entity';
 import { TipoCliente } from './tipoCliente.entity';
 import { ListaPrecios } from './listaPrecios.entity';
 
 @Entity('tbl_Clientes')
 export class Cliente {
-  @PrimaryColumn()
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  codCliente: string;
   @Column()
   NIT: string;
   @Column()
@@ -24,11 +33,11 @@ export class Cliente {
   @JoinColumn({ name: 'id_Vendedor' })
   vendedor: Vendedor;
 
-  @ManyToOne(() => TipoCliente, (tipoCliente) => tipoCliente.ID)
+  @ManyToOne(() => TipoCliente, (tipoCliente) => tipoCliente.id)
   @JoinColumn({ name: 'id_Tipo_Cliente' })
   tipoCliente: TipoCliente;
 
-  @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.ID_LISTA)
+  @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.id)
   @JoinColumn({ name: 'id_Lista_Precio' })
   listaPrecios: ListaPrecios;
 }

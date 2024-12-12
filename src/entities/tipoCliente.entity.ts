@@ -1,9 +1,12 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('tbl_Tipo_Clientes')
 export class TipoCliente {
-  @PrimaryColumn()
-  ID: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  codTipoCliente: string;
 
   @Column()
   Detalle: string;

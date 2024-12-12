@@ -10,8 +10,11 @@ import { Sublinea } from './subLinea.entity';
 
 @Entity('tbl_Det_Linea')
 export class DetLineas {
-  @PrimaryColumn()
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  codDetLinea: string;
 
   @Column()
   detalle: string;

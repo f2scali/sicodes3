@@ -1,12 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('tbl_Tipo_Inventario')
 export class TipoInventario {
   @PrimaryGeneratedColumn()
-  ID: number;
+  id: number;
 
   @Column()
-  Detalle: string;
+  codInventario: string;
+
+  @Column()
+  detalle: string;
 
   @Column({ default: 1 })
   estado: number;

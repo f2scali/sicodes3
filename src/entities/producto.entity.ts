@@ -13,20 +13,10 @@ import { Linea } from './linea.entity';
 @Entity('tbl_producto')
 export class Producto {
   @PrimaryGeneratedColumn('increment')
-  ID: number;
+  id: number;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    asExpression: `
-      CASE 
-        WHEN ID_EXT_ITM IS NULL OR ID_EXT_ITM = '' THEN ID_ITEM
-        ELSE CONCAT(ID_ITEM, '-', ID_EXT_ITM)
-      END`,
-  })
-  ID_Producto: string;
   @Column({ nullable: true })
-  ID_TIPO_INVENTARIO: string;
+  codInventario: number;
 
   @Column()
   ID_ITEM: string;
@@ -41,13 +31,13 @@ export class Producto {
   DESCRIPCION: string;
 
   @Column({ nullable: true })
-  UNIMED_INV_1: string;
+  UNIMED_INV_1: number;
 
   @Column({ nullable: true })
-  ID_LINEA: string;
+  ID_LINEA: number;
 
   @Column({ nullable: true })
-  ID_CRICLA1: string;
+  ID_CRICLA1: number;
 
   @Column({ default: 0 })
   COSTO: number;
@@ -55,11 +45,11 @@ export class Producto {
   @Column({ default: 1 })
   estado: number;
 
-  @ManyToOne(() => TipoInventario, (tipo) => tipo.ID)
-  @JoinColumn({ name: 'ID_TIPO_INVENTARIO' })
+  @ManyToOne(() => TipoInventario, (tipo) => tipo.id)
+  @JoinColumn({ name: 'codInventario' })
   tipoInventario: TipoInventario;
 
-  @ManyToOne(() => UnidadMed, (unidad) => unidad.ID)
+  @ManyToOne(() => UnidadMed, (unidad) => unidad.id)
   @JoinColumn({ name: 'UNIMED_INV_1' })
   unidadMed: UnidadMed;
 
@@ -67,7 +57,7 @@ export class Producto {
   @JoinColumn({ name: 'ID_LINEA' })
   linea: Linea;
 
-  @ManyToOne(() => Criterio, (criterio) => criterio.ID)
+  @ManyToOne(() => Criterio, (criterio) => criterio.id)
   @JoinColumn({ name: 'ID_CRICLA1' })
   criterio: Criterio;
 }

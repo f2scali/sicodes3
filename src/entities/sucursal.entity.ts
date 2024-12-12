@@ -10,7 +10,10 @@ import { Cliente } from './cliente.entity';
 @Entity('tbl_Sucursal')
 export class Sucursal {
   @PrimaryGeneratedColumn()
-  ID: number;
+  id: number;
+
+  @Column({ unique: true })
+  codSucursal: string;
 
   @Column()
   id_Cliente: string;

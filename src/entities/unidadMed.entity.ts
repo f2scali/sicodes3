@@ -2,18 +2,18 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   ManyToOne,
   JoinColumn,
-  Generated,
-  PrimaryColumn,
 } from 'typeorm';
 import { TipoInventario } from './tipoInventario.entity';
 
 @Entity('tbl_Unidad_Med')
 export class UnidadMed {
-  @PrimaryColumn()
-  ID: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  codUnidadMed: string;
 
   @Column()
   Detalle: string;
@@ -24,7 +24,7 @@ export class UnidadMed {
   @Column({ default: 1 })
   estado: number;
 
-  @ManyToOne(() => TipoInventario, (tipo) => tipo.ID)
+  @ManyToOne(() => TipoInventario, (tipo) => tipo.id)
   @JoinColumn({ name: 'id_tipo_inv' })
   tipoInventario: TipoInventario;
 }

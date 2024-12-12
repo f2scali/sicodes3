@@ -15,21 +15,21 @@ export class DetalleListaPrecios {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  ID_Producto: string;
+  idProducto: string;
 
   @Column()
-  id_Lista_Precios: string;
+  idListaPrecio: string;
 
   @Column('double')
   PRECIO: Double;
 
-  // @ManyToOne(() => Producto, (producto) => producto.ID)
-  // @JoinColumn({ name: 'ID_Producto' })
-  // producto: Producto;
+  @ManyToOne(() => Producto, (producto) => producto.id)
+  @JoinColumn({ name: 'idProducto' })
+  producto: Producto;
 
-  // @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.ID_LISTA)
-  // @JoinColumn({ name: 'id_Lista_Precios' })
-  // listaPrecios: ListaPrecios;
+  @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.id)
+  @JoinColumn({ name: 'idListaPrecio' })
+  listaPrecios: ListaPrecios;
 
   @Column({ default: 1 })
   estado: number;

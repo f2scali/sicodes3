@@ -13,7 +13,7 @@ export class Ppto {
   id: number;
 
   @Column()
-  id_Vendedor: number;
+  codVendedor: string;
 
   @Column()
   AÑO: string;

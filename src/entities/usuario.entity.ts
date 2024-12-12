@@ -1,10 +1,21 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { Roles } from './roles.entity';
 
 @Entity('tbl_Usuarios')
 export class Usuario {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ unique: true })
+  codUsuario: string;
 
   @Column({ unique: true })
   usuario: string;

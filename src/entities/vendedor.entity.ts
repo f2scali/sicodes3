@@ -1,10 +1,20 @@
-import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Usuario } from './usuario.entity';
 
 @Entity('tbl_Vendedor')
 export class Vendedor {
-  @PrimaryColumn()
-  id: number; // ID principal y clave primaria compartida con Usuario
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  codVendedor: string;
 
   @Column({ length: 100 })
   NOMBRE: string;
@@ -21,6 +31,6 @@ export class Vendedor {
   @Column({ default: 1 })
   estado: number;
   @OneToOne(() => Usuario, (usuario) => usuario.id)
-  @JoinColumn({ name: 'id' })
+  @JoinColumn({ name: 'codVendedor' })
   usuario: Usuario; // Relación 1:1 con Usuario
 }
