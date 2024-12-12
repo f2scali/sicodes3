@@ -16,9 +16,12 @@ import { DetListaPrecioModule } from './modules/detListaPrecios.module';
 import { IsUnique } from './validators/isUnique-validator';
 import { CriterioModule } from './modules/criterio.module';
 import { PptoModule } from './modules/ppto.module';
+import { AuthModule } from './modules/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -44,6 +47,7 @@ import { PptoModule } from './modules/ppto.module';
     ProductoModule,
     DetListaPrecioModule,
     PptoModule,
+    AuthModule,
   ],
   providers: [IsUnique],
 })
