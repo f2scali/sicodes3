@@ -29,7 +29,7 @@ export class TipoClienteServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID: number): Promise<TipoCliente | null> {
+  findOne(ID: string): Promise<TipoCliente | null> {
     return this.tipoClienteRepository.findOneBy({ ID });
   }
 

@@ -3,6 +3,8 @@ import { UsuarioModule } from './usuario.module';
 import { AuthService } from 'src/services/auth.service';
 import { AuthController } from 'src/controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 @Module({
   imports: [
@@ -13,7 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, { provide: APP_GUARD, useClass: AuthGuard }],
   controllers: [AuthController],
   exports: [AuthService],
 })

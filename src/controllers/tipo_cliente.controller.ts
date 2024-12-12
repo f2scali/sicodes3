@@ -36,7 +36,7 @@ export class TipoClienteController {
   }
 
   @Get(':id')
-  async getTipoCliente(@Param('id') id: number): Promise<TipoCliente> {
+  async getTipoCliente(@Param('id') id: string): Promise<TipoCliente> {
     const tipoCliente = await this.tipoClienteService.findOne(id);
     if (!tipoCliente) {
       throw new HttpException(

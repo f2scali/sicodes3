@@ -23,7 +23,7 @@ export class DetListaPrecioController {
   @Get()
   async findAllActivos(
     @Query('idProducto') idProducto: number,
-    @Query('idLista') idLista: number,
+    @Query('idLista') idLista: string,
   ): Promise<DetalleListaPrecios[]> {
     if (idProducto && idLista) {
       return await this.detListaPrecioService.findByProductAndLista(
@@ -31,7 +31,6 @@ export class DetListaPrecioController {
         idLista,
       );
     }
-    return await this.detListaPrecioService.findAllActivos();
   }
 
   @Post()
@@ -44,8 +43,8 @@ export class DetListaPrecioController {
 
   @Patch(':ID_Producto/:id_Lista_Precios')
   cambiarEstado(
-    @Param('ID_Producto') ID_Producto: number,
-    @Param('id_Lista_Precios') id_Lista_Precios: number,
+    @Param('ID_Producto') ID_Producto: string,
+    @Param('id_Lista_Precios') id_Lista_Precios: string,
     @Query('estado', ParseIntPipe) estado: number,
   ): Promise<DetalleListaPrecios> {
     return this.detListaPrecioService.cambiarEstado(

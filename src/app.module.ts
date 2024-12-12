@@ -45,7 +45,7 @@ import { ConfigModule } from '@nestjs/config';
     DetLineaModule,
     TipoInventarioModule,
     ProductoModule,
-    DetListaPrecioModule,
+    // DetListaPrecioModule,
     PptoModule,
     AuthModule,
   ],

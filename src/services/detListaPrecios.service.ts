@@ -44,7 +44,7 @@ export class DetListaPrecioServices {
   }
   async findByProductAndLista(
     ID_Producto: number,
-    id_Lista_Precios: number,
+    id_Lista_Precios: string,
   ): Promise<DetalleListaPrecios[]> {
     const results = await this.estadoService.findAllActivos({
       where: {
@@ -89,7 +89,7 @@ export class DetListaPrecioServices {
     // Verificar la existencia del Producto relacionado
     const productoExistente =
       await this.detalleListaPrecioRepository.manager.findOne(Producto, {
-        where: { ID: ID_Producto },
+        where: { ID_Producto },
       });
 
     if (!productoExistente) {
@@ -119,8 +119,8 @@ export class DetListaPrecioServices {
   }
 
   async cambiarEstado(
-    ID_Producto: number,
-    id_Lista_Precios: number,
+    ID_Producto: string,
+    id_Lista_Precios: string,
     estado: number,
   ): Promise<DetalleListaPrecios> {
     const result = await this.detalleListaPrecioRepository.findOne({
@@ -133,12 +133,12 @@ export class DetListaPrecioServices {
       );
     }
 
-    if (result.producto.estado === 1 || result.listaPrecios.estado === 1) {
-      throw new HttpException(
-        `No se puede inactivar porque el producto o la lista de precios están activos.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // if (result.producto.estado === 1 || result.listaPrecios.estado === 1) {
+    //   throw new HttpException(
+    //     `No se puede inactivar porque el producto o la lista de precios están activos.`,
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
 
     result.estado = estado;
     return this.detalleListaPrecioRepository.save(result);

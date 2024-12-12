@@ -29,7 +29,7 @@ export class ListaPreciosServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID_LISTA: number): Promise<ListaPrecios | null> {
+  findOne(ID_LISTA: string): Promise<ListaPrecios | null> {
     return this.listaPreciosRepository.findOneBy({ ID_LISTA });
   }
 

@@ -1,10 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from 'src/entities/usuario.entity';
 import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosServices {
@@ -37,6 +38,10 @@ export class UsuariosServices {
     return this.usuariosRepository.findOneBy({ usuario });
   }
   async createUsuario(data: Partial<Usuario>): Promise<Usuario> {
+    if (data.contraseña) {
+      const saltRounds = 10;
+      data.contraseña = await bcrypt.hash(data.contraseña, saltRounds);
+    }
     const newUsuario = this.usuariosRepository.create(data);
     return this.usuariosRepository.save(newUsuario);
   }

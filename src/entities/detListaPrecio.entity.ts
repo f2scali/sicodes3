@@ -5,28 +5,31 @@ import {
   JoinColumn,
   Column,
   Double,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Producto } from './producto.entity';
 import { ListaPrecios } from './listaPrecios.entity';
 
 @Entity('tbl_Detalle_Lista_Precios')
 export class DetalleListaPrecios {
-  @PrimaryColumn()
-  ID_Producto: number;
+  @PrimaryGeneratedColumn()
+  id: number;
+  @Column()
+  ID_Producto: string;
 
-  @PrimaryColumn()
-  id_Lista_Precios: number;
+  @Column()
+  id_Lista_Precios: string;
 
   @Column('double')
   PRECIO: Double;
 
-  @ManyToOne(() => Producto, (producto) => producto.ID)
-  @JoinColumn({ name: 'ID_Producto' })
-  producto: Producto;
+  // @ManyToOne(() => Producto, (producto) => producto.ID)
+  // @JoinColumn({ name: 'ID_Producto' })
+  // producto: Producto;
 
-  @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.ID_LISTA)
-  @JoinColumn({ name: 'id_Lista_Precios' })
-  listaPrecios: ListaPrecios;
+  // @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.ID_LISTA)
+  // @JoinColumn({ name: 'id_Lista_Precios' })
+  // listaPrecios: ListaPrecios;
 
   @Column({ default: 1 })
   estado: number;
