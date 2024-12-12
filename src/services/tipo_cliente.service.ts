@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateTipoClienteDTO } from 'src/DTOs/tipoCliente.dto';
 
 @Injectable()
 export class TipoClienteServices {
@@ -29,22 +30,11 @@ export class TipoClienteServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID: string): Promise<TipoCliente | null> {
-    return this.tipoClienteRepository.findOneBy({ ID });
+  findOne(id: number): Promise<TipoCliente | null> {
+    return this.tipoClienteRepository.findOneBy({ id });
   }
 
-  async createTipoCliente(data: Partial<TipoCliente>): Promise<TipoCliente> {
-    const tipoClienteExistente = await this.tipoClienteRepository.findOneBy({
-      Detalle: data.Detalle,
-    });
-
-    if (tipoClienteExistente) {
-      throw new HttpException(
-        `El usuario ${data.Detalle} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createTipoCliente(data: CreateTipoClienteDTO): Promise<TipoCliente> {
     const newTipoCliente = this.tipoClienteRepository.create(data);
     return this.tipoClienteRepository.save(newTipoCliente);
   }

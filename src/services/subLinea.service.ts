@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateSubLineaDTO } from 'src/DTOs/subLinea.dto';
 
 @Injectable()
 export class SubLineaServices {
@@ -29,22 +30,11 @@ export class SubLineaServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(id: string): Promise<Sublinea | null> {
+  findOne(id: number): Promise<Sublinea | null> {
     return this.subLineaRepository.findOneBy({ id });
   }
 
-  async createSublinea(data: Partial<Sublinea>): Promise<Sublinea> {
-    const sublineaExistente = await this.subLineaRepository.findOneBy({
-      detalle: data.detalle,
-    });
-
-    if (sublineaExistente) {
-      throw new HttpException(
-        `La sublinea ${data.detalle} ya está registrada.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createSublinea(data: CreateSubLineaDTO): Promise<Sublinea> {
     const newSublinea = this.subLineaRepository.create(data);
     return this.subLineaRepository.save(newSublinea);
   }

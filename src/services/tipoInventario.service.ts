@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateTipoInventarioDTO } from 'src/DTOs/tipoInventario.dto';
 
 @Injectable()
 export class TipoInventarioServices {
@@ -30,25 +31,13 @@ export class TipoInventarioServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID: number): Promise<TipoInventario | null> {
-    return this.tipoInventarioRepository.findOneBy({ ID });
+  findOne(id: number): Promise<TipoInventario | null> {
+    return this.tipoInventarioRepository.findOneBy({ id });
   }
 
   async createTipoInventario(
-    data: Partial<TipoInventario>,
+    data: CreateTipoInventarioDTO,
   ): Promise<TipoInventario> {
-    const tipoInventarioExistente =
-      await this.tipoInventarioRepository.findOneBy({
-        Detalle: data.Detalle,
-      });
-
-    if (tipoInventarioExistente) {
-      throw new HttpException(
-        `El tipo de inventario ${data.Detalle} ya está registrada.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     const newTipoInventario = this.tipoInventarioRepository.create(data);
     return this.tipoInventarioRepository.save(newTipoInventario);
   }

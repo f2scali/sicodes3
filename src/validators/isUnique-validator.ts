@@ -10,6 +10,7 @@ const fieldName: Record<string, string> = {
   ID_ITEM: 'El ID del producto',
   NIT: 'El NIT',
   usuario: 'El usuario',
+  codVendedor: 'El código del vendedor',
 };
 @ValidatorConstraint({ name: 'IsUniqueConstraint', async: true })
 @Injectable()

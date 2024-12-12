@@ -6,6 +6,7 @@ import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import * as bcrypt from 'bcrypt';
+import { CreateUsuarioDTO } from 'src/DTOs/usuario.dto';
 
 @Injectable()
 export class UsuariosServices {
@@ -30,14 +31,14 @@ export class UsuariosServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(id: number): Promise<Usuario | null> {
+  findOne(id: number): Promise<Usuario | undefined> {
     return this.usuariosRepository.findOneBy({ id });
   }
 
   findByUsername(usuario: string): Promise<Usuario | undefined> {
     return this.usuariosRepository.findOneBy({ usuario });
   }
-  async createUsuario(data: Partial<Usuario>): Promise<Usuario> {
+  async createUsuario(data: CreateUsuarioDTO): Promise<Usuario> {
     if (data.contraseña) {
       const saltRounds = 10;
       data.contraseña = await bcrypt.hash(data.contraseña, saltRounds);

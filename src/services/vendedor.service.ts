@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateVendedorDTO } from 'src/DTOs/vendedor.dto';
 
 @Injectable()
 export class VendedorServices {
@@ -46,18 +47,7 @@ export class VendedorServices {
     return this.vendedorRepository.findOneBy({ id });
   }
 
-  async createVendedor(data: Partial<Vendedor>): Promise<Vendedor> {
-    const vendedorExistente = await this.vendedorRepository.findOneBy({
-      id: data.id,
-    });
-
-    if (vendedorExistente) {
-      throw new HttpException(
-        `El usuario ${data.id} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createVendedor(data: CreateVendedorDTO): Promise<Vendedor> {
     const newVendedor = this.vendedorRepository.create(data);
     return this.vendedorRepository.save(newVendedor);
   }

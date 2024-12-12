@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateUnidadMedDTO } from 'src/DTOs/unidadMed.dto';
 
 @Injectable()
 export class UnidadMedServices {
@@ -29,22 +30,11 @@ export class UnidadMedServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID: string): Promise<UnidadMed | null> {
-    return this.unidadMedRepository.findOneBy({ ID });
+  findOne(id: number): Promise<UnidadMed | undefined> {
+    return this.unidadMedRepository.findOneBy({ id });
   }
 
-  async createUnidadMed(data: Partial<UnidadMed>): Promise<UnidadMed> {
-    const unidadMedExistente = await this.unidadMedRepository.findOneBy({
-      Detalle: data.Detalle,
-    });
-
-    if (unidadMedExistente) {
-      throw new HttpException(
-        `La unidad de med ${data.Detalle} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createUnidadMed(data: CreateUnidadMedDTO): Promise<UnidadMed> {
     const newUnidadMed = this.unidadMedRepository.create(data);
     return this.unidadMedRepository.save(newUnidadMed);
   }

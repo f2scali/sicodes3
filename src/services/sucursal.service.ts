@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateSucursalDTO } from 'src/DTOs/sucursal.dto';
 
 @Injectable()
 export class SucursalServices {
@@ -29,16 +30,16 @@ export class SucursalServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID: number): Promise<Sucursal | null> {
-    return this.sucursalRepository.findOneBy({ ID });
+  findOne(id: number): Promise<Sucursal | null> {
+    return this.sucursalRepository.findOneBy({ id });
   }
 
-  async createSucursal(data: Partial<Sucursal>): Promise<Sucursal> {
+  async createSucursal(data: CreateSucursalDTO): Promise<Sucursal> {
     const newSucursal = this.sucursalRepository.create(data);
     return this.sucursalRepository.save(newSucursal);
   }
 
-  async cambiarEstado(ID: number, estado: number): Promise<Sucursal> {
-    return this.estadoService.cambiarEstado('ID', ID, estado);
+  async cambiarEstado(id: number, estado: number): Promise<Sucursal> {
+    return this.estadoService.cambiarEstado('id', id, estado);
   }
 }
