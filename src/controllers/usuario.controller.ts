@@ -8,10 +8,12 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUsuarioDTO } from 'src/DTOs/usuario.dto';
+import { Ruta } from 'src/entities/rutas.entity';
 import { Usuario } from 'src/entities/usuario.entity';
 import { UsuariosServices } from 'src/services/usuario.service';
 
@@ -43,6 +45,11 @@ export class UsuariosController {
     return usuario;
   }
 
+  @Get('/rutas')
+  async getRutasByUsuario(@Req() req: any): Promise<Ruta[]> {
+    const usuario = req.user;
+    return await this.usuariosService.findRutasByUsuario(usuario.id);
+  }
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createUsuario(@Body() data: CreateUsuarioDTO): Promise<Usuario> {

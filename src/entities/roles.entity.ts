@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Ruta } from './rutas.entity';
+import { Menu } from './menu.entity';
 
 @Entity('tbl_Roles')
 export class Roles {
@@ -7,4 +15,12 @@ export class Roles {
 
   @Column()
   descripcion: string;
+
+  @ManyToMany(() => Ruta, (ruta) => ruta.roles)
+  @JoinTable()
+  rutas: Ruta[];
+
+  @ManyToMany(() => Menu, (menu) => menu.roles)
+  @JoinTable()
+  menus: Menu[];
 }

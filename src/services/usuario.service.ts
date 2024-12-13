@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from 'src/entities/usuario.entity';
 import { Repository } from 'typeorm';
@@ -7,6 +7,7 @@ import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import * as bcrypt from 'bcrypt';
 import { CreateUsuarioDTO } from 'src/DTOs/usuario.dto';
+import { Ruta } from 'src/entities/rutas.entity';
 
 @Injectable()
 export class UsuariosServices {
@@ -49,5 +50,15 @@ export class UsuariosServices {
 
   async cambiarEstado(id: number, estado: number): Promise<Usuario> {
     return this.estadoService.cambiarEstado('id', id, estado);
+  }
+
+  async findRutasByUsuario(idUsuario: number): Promise<Ruta[]> {
+    const usuario = await this.usuariosRepository.findOne({
+      where: { id: idUsuario },
+      relations: ['roles', 'roles.rutas', 'roles.rutas.subrutas'],
+    });
+
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
+    return usuario.rol.rutas;
   }
 }
