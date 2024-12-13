@@ -14,7 +14,7 @@ export class Vendedor {
   id: number;
 
   @Column({ unique: true })
-  codVendedor: string;
+  idUsuario: number;
 
   @Column({ length: 100 })
   NOMBRE: string;
@@ -31,6 +31,6 @@ export class Vendedor {
   @Column({ default: 1 })
   estado: number;
   @OneToOne(() => Usuario, (usuario) => usuario.id)
-  @JoinColumn({ name: 'codVendedor' })
+  @JoinColumn({ name: 'idUsuario' })
   usuario: Usuario; // Relación 1:1 con Usuario
 }

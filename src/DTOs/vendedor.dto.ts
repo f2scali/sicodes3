@@ -9,10 +9,10 @@ import {
 import { IsUnique } from 'src/validators/isUnique-validator';
 
 export class CreateVendedorDTO {
-  @Validate(IsUnique, ['Vendedor', 'codVendedor'])
+  @Validate(IsUnique, ['Vendedor', 'idUsuario'])
   @IsNotEmpty({ message: 'El campo cedula es requerido' })
-  @IsString()
-  codVendedor: string;
+  @IsNumber()
+  idUsuario: number;
 
   @IsNotEmpty({ message: 'El nombre es requerido' })
   @IsString()

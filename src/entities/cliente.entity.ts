@@ -13,10 +13,7 @@ import { ListaPrecios } from './listaPrecios.entity';
 export class Cliente {
   @PrimaryGeneratedColumn()
   id: number;
-
   @Column({ unique: true })
-  codCliente: string;
-  @Column()
   NIT: string;
   @Column()
   Descripcion: string;

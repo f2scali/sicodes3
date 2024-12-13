@@ -19,7 +19,10 @@ export class VendedorServices {
   private readonly queryService: QueryService<Vendedor>;
   constructor(
     @InjectRepository(Vendedor)
-    private vendedorRepository: Repository<Vendedor>,
+    private readonly vendedorRepository: Repository<Vendedor>,
+
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
   ) {
     this.estadoService = new EstadoService(this.vendedorRepository);
     this.queryService = new QueryService(this.vendedorRepository);
@@ -48,6 +51,20 @@ export class VendedorServices {
   }
 
   async createVendedor(data: CreateVendedorDTO): Promise<Vendedor> {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id: data.idUsuario },
+    });
+
+    if (!usuario) {
+      throw new HttpException('Usuario no encontrado', HttpStatus.BAD_REQUEST);
+    }
+
+    if (usuario.id_rol !== 2) {
+      throw new HttpException(
+        'Solo los usuarios con rol 2 pueden ser vendedores',
+        HttpStatus.FORBIDDEN,
+      );
+    }
     const newVendedor = this.vendedorRepository.create(data);
     return this.vendedorRepository.save(newVendedor);
   }

@@ -16,7 +16,7 @@ export class Sucursal {
   codSucursal: string;
 
   @Column()
-  id_Cliente: string;
+  id_Cliente: number;
 
   @Column()
   Detalle: string;
