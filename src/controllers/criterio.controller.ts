@@ -37,7 +37,7 @@ export class CriterioController {
   }
 
   @Get(':id')
-  async getCriterio(@Param('id') id: string): Promise<Criterio> {
+  async getCriterio(@Param('id') id: number): Promise<Criterio> {
     const Criterio = await this.criterioService.findOne(id);
     if (!Criterio) {
       throw new HttpException('Det lineas no encontrado', HttpStatus.NOT_FOUND);

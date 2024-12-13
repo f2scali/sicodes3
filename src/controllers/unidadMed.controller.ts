@@ -34,7 +34,7 @@ export class UnidadMedController {
   }
 
   @Get(':id')
-  async getUnidadMed(@Param('id') id: string): Promise<UnidadMed> {
+  async getUnidadMed(@Param('id') id: number): Promise<UnidadMed> {
     const unidadMed = await this.unidadMedService.findOne(id);
     if (!unidadMed) {
       throw new HttpException(

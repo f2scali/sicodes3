@@ -48,9 +48,13 @@ export class ProductosController {
 
   @Get('byId/:ID_Producto')
   async getProductoById(
-    @Param('ID_Producto') ID_Producto: string,
+    @Param('ID_Producto') id_item: string,
+    id_ext_item: string,
   ): Promise<Producto> {
-    const producto = await this.productoService.findByProductoId(ID_Producto);
+    const producto = await this.productoService.findByProductoId(
+      id_item,
+      id_ext_item,
+    );
     if (!producto) {
       throw new HttpException(
         'El producto no ha sido encontrado',

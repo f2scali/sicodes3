@@ -11,6 +11,7 @@ import { EstadoService } from './estado.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { QueryService } from './query.service';
 import { Ppto } from 'src/entities/ppto.entity';
+import { CreatePptoDTO } from 'src/DTOs/ppto.dto';
 
 @Injectable()
 export class PptoServices {
@@ -39,18 +40,7 @@ export class PptoServices {
     return this.pptoRepository.findOneBy({ id });
   }
 
-  async createPpto(data: Partial<Ppto>): Promise<Ppto> {
-    const PptoExistente = await this.pptoRepository.findOneBy({
-      id: data.id,
-    });
-
-    if (PptoExistente) {
-      throw new HttpException(
-        `El Ppto ${data.id} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createPpto(data: CreatePptoDTO): Promise<Ppto> {
     const newPpto = this.pptoRepository.create(data);
     return this.pptoRepository.save(newPpto);
   }

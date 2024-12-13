@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { QueryService } from './query.service';
+import { CreateClienteDTO } from 'src/DTOs/cliente.dto';
 
 @Injectable()
 export class ClientesServices {
@@ -34,27 +35,16 @@ export class ClientesServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(id: string): Promise<Cliente | null> {
+  findOne(id: number): Promise<Cliente | null> {
     return this.clientesRepository.findOneBy({ id });
   }
 
-  async createCliente(data: Partial<Cliente>): Promise<Cliente> {
-    const clienteExistente = await this.clientesRepository.findOneBy({
-      id: data.id,
-    });
-
-    if (clienteExistente) {
-      throw new HttpException(
-        `El cliente ${data.id} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createCliente(data: CreateClienteDTO): Promise<Cliente> {
     const newCliente = this.clientesRepository.create(data);
     return this.clientesRepository.save(newCliente);
   }
 
-  async cambiarEstado(id: string, estado: number): Promise<Cliente> {
+  async cambiarEstado(id: number, estado: number): Promise<Cliente> {
     const result = await this.clientesRepository.findOne({
       where: { id },
       relations: ['vendedor', 'listaPrecios', 'tipoCliente'],

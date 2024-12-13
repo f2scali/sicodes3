@@ -1,10 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { Criterio } from 'src/entities/criterio.entity';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { QueryService } from './query.service';
+import { CreateCriterioDTO } from 'src/DTOs/criterio.dto';
 
 @Injectable()
 export class CriterioServices {
@@ -30,27 +31,16 @@ export class CriterioServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID: string): Promise<Criterio | null> {
-    return this.criterioRepository.findOneBy({ ID });
+  findOne(id: number): Promise<Criterio | null> {
+    return this.criterioRepository.findOneBy({ id });
   }
 
-  async createCriterio(data: Partial<Criterio>): Promise<Criterio> {
-    const CriterioExistente = await this.criterioRepository.findOneBy({
-      Detalle: data.Detalle,
-    });
-
-    if (CriterioExistente) {
-      throw new HttpException(
-        `El Criterio ${data.Detalle} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createCriterio(data: CreateCriterioDTO): Promise<Criterio> {
     const newCriterio = this.criterioRepository.create(data);
     return this.criterioRepository.save(newCriterio);
   }
 
-  async cambiarEstado(ID: number, estado: number): Promise<Criterio> {
-    return this.estadoService.cambiarEstado('ID', ID, estado);
+  async cambiarEstado(id: number, estado: number): Promise<Criterio> {
+    return this.estadoService.cambiarEstado('id', id, estado);
   }
 }

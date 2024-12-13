@@ -34,7 +34,7 @@ export class ListaPreciosController {
   }
 
   @Get(':id')
-  async getListaPrecios(@Param('id') id: string): Promise<ListaPrecios> {
+  async getListaPrecios(@Param('id') id: number): Promise<ListaPrecios> {
     const listaPrecios = await this.listaPreciosService.findOne(id);
     if (!listaPrecios) {
       throw new HttpException(

@@ -34,7 +34,7 @@ export class LineaController {
   }
 
   @Get(':id')
-  async getLineas(@Param('id') id: string): Promise<Linea> {
+  async getLineas(@Param('id') id: number): Promise<Linea> {
     const linea = await this.lineaService.findOne(id);
     if (!linea) {
       throw new HttpException('linea no encontrado', HttpStatus.NOT_FOUND);

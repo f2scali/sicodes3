@@ -22,8 +22,24 @@ export class DetListaPrecioController {
 
   @Get()
   async findAllActivos(
-    @Query('idProducto') idProducto: number,
-    @Query('idLista') idLista: string,
+    @Query()
+    query: {
+      page?: number;
+      limit?: number;
+      search?: string;
+      orderBy?: string;
+      orderDirection?: 'ASC' | 'DESC';
+    },
+  ): Promise<{ data: DetalleListaPrecios[]; total: number }> {
+    return await this.detListaPrecioService.findDetalleListaPreciosWithQuery(
+      query,
+    );
+  }
+
+  @Get('/byIds/:idProducto/:idLista')
+  async findByProductAndLista(
+    @Param('idProducto', ParseIntPipe) idProducto: number,
+    @Param('idLista', ParseIntPipe) idLista: number,
   ): Promise<DetalleListaPrecios[]> {
     if (idProducto && idLista) {
       return await this.detListaPrecioService.findByProductAndLista(
@@ -31,8 +47,12 @@ export class DetListaPrecioController {
         idLista,
       );
     }
-  }
 
+    throw new HttpException(
+      'Se necesita el id del producto y de la lista de precios',
+      HttpStatus.BAD_REQUEST,
+    );
+  }
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createDetListaPrecios(
@@ -43,12 +63,14 @@ export class DetListaPrecioController {
 
   @Patch(':ID_Producto/:id_Lista_Precios')
   cambiarEstado(
-    @Param('ID_Producto') ID_Producto: string,
-    @Param('id_Lista_Precios') id_Lista_Precios: string,
+    @Query('id_item') id_item: string,
+    @Query('id_ext_item') id_ext_item: string,
+    @Param('id_Lista_Precios') id_Lista_Precios: number,
     @Query('estado', ParseIntPipe) estado: number,
   ): Promise<DetalleListaPrecios> {
     return this.detListaPrecioService.cambiarEstado(
-      ID_Producto,
+      id_item,
+      id_ext_item,
       id_Lista_Precios,
       estado,
     );

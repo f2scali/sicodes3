@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateDetListaPrecioDTO } from 'src/DTOs/detListaPrecios.dto';
 
 @Injectable()
 export class DetListaPrecioServices {
@@ -40,19 +41,23 @@ export class DetListaPrecioServices {
     query: QueryDTO,
   ): Promise<{ data: DetalleListaPrecios[]; total: number }> {
     const validOrderFields = ['PRECIO'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['producto', 'listaPrecios'],
+      relationFilters: {
+        producto: { estado: 1 },
+        listaPrecios: { estado: 1 },
+      },
+    });
   }
   async findByProductAndLista(
-    ID_Producto: number,
-    id_Lista_Precios: string,
+    id_producto: number,
+    idListaPrecio: number,
   ): Promise<DetalleListaPrecios[]> {
     const results = await this.estadoService.findAllActivos({
       where: {
-        ID_Producto,
-        id_Lista_Precios,
+        producto: { id: id_producto, estado: 1 },
+        listaPrecios: { id: idListaPrecio, estado: 1 },
         estado: 1,
-        producto: { estado: 1 },
-        listaPrecios: { estado: 1 },
       },
       relations: ['producto', 'listaPrecios'],
     });
@@ -69,76 +74,41 @@ export class DetListaPrecioServices {
   }
 
   async createDetalleListaPrecios(
-    data: Partial<DetalleListaPrecios>,
+    data: CreateDetListaPrecioDTO,
   ): Promise<DetalleListaPrecios> {
-    const { ID_Producto, id_Lista_Precios } = data;
-
-    // Verificar si el registro ya existe
-    const detalleListaPreciosExistente =
-      await this.detalleListaPrecioRepository.findOne({
-        where: { ID_Producto, id_Lista_Precios },
-      });
-
-    if (detalleListaPreciosExistente) {
-      throw new HttpException(
-        `El registro con ID_Producto '${ID_Producto}' y id_Lista_Precios '${id_Lista_Precios}' ya existe.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    // Verificar la existencia del Producto relacionado
-    const productoExistente =
-      await this.detalleListaPrecioRepository.manager.findOne(Producto, {
-        where: { ID_Producto },
-      });
-
-    if (!productoExistente) {
-      throw new HttpException(
-        `No se encontró un producto con ID '${ID_Producto}'.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    // Verificar la existencia de la Lista de Precios relacionada
-    const listaPreciosExistente =
-      await this.detalleListaPrecioRepository.manager.findOne(ListaPrecios, {
-        where: { ID_LISTA: id_Lista_Precios },
-      });
-
-    if (!listaPreciosExistente) {
-      throw new HttpException(
-        `No se encontró una lista de precios con ID '${id_Lista_Precios}'.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    // Crear el nuevo registro
     const newDetalleListaPrecios =
       this.detalleListaPrecioRepository.create(data);
     return this.detalleListaPrecioRepository.save(newDetalleListaPrecios);
   }
 
   async cambiarEstado(
-    ID_Producto: string,
-    id_Lista_Precios: string,
+    id_item: string,
+    id_ext_item: string,
+    idListaPrecio: number,
     estado: number,
   ): Promise<DetalleListaPrecios> {
     const result = await this.detalleListaPrecioRepository.findOne({
-      where: { ID_Producto, id_Lista_Precios },
+      where: {
+        producto: { id_item, id_ext_item },
+        listaPrecios: { id: idListaPrecio },
+      },
       relations: ['producto', 'listaPrecios'],
     });
+
     if (!result) {
       throw new NotFoundException(
-        `No se encontró un registro con ID_Producto ${ID_Producto} y id_Lista_Precios ${id_Lista_Precios}.`,
+        `No se encontró registro ${id_item}` + id_ext_item
+          ? ` y ${id_ext_item}`
+          : '',
       );
     }
 
-    // if (result.producto.estado === 1 || result.listaPrecios.estado === 1) {
-    //   throw new HttpException(
-    //     `No se puede inactivar porque el producto o la lista de precios están activos.`,
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
+    if (result.producto.estado === 1 || result.listaPrecios.estado === 1) {
+      throw new HttpException(
+        `No se puede inactivar porque el producto o la lista de precios están activos.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     result.estado = estado;
     return this.detalleListaPrecioRepository.save(result);

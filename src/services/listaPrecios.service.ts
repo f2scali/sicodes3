@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateListaPreciosDTO } from 'src/DTOs/listaPrecios.dto';
 
 @Injectable()
 export class ListaPreciosServices {
@@ -25,31 +26,20 @@ export class ListaPreciosServices {
   async findListaPreciosWithQuery(
     query: QueryDTO,
   ): Promise<{ data: ListaPrecios[]; total: number }> {
-    const validOrderFields = ['DETALLE'];
+    const validOrderFields = ['DETALLE', 'codLista'];
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(ID_LISTA: string): Promise<ListaPrecios | null> {
-    return this.listaPreciosRepository.findOneBy({ ID_LISTA });
+  findOne(id: number): Promise<ListaPrecios | null> {
+    return this.listaPreciosRepository.findOneBy({ id });
   }
 
-  async createListaPrecios(data: Partial<ListaPrecios>): Promise<ListaPrecios> {
-    const listaPreciosExistente = await this.listaPreciosRepository.findOneBy({
-      DETALLE: data.DETALLE,
-    });
-
-    if (listaPreciosExistente) {
-      throw new HttpException(
-        `El usuario ${data.DETALLE} ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createListaPrecios(data: CreateListaPreciosDTO): Promise<ListaPrecios> {
     const newListaPrecios = this.listaPreciosRepository.create(data);
     return this.listaPreciosRepository.save(newListaPrecios);
   }
 
-  async cambiarEstado(ID_LISTA: number, estado: number): Promise<ListaPrecios> {
-    return this.estadoService.cambiarEstado('ID_LISTA', ID_LISTA, estado);
+  async cambiarEstado(id: number, estado: number): Promise<ListaPrecios> {
+    return this.estadoService.cambiarEstado('id', id, estado);
   }
 }

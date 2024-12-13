@@ -34,7 +34,7 @@ export class DetLineaController {
   }
 
   @Get(':id')
-  async getDetLineas(@Param('id') id: string): Promise<DetLineas> {
+  async getDetLineas(@Param('id') id: number): Promise<DetLineas> {
     const detLineas = await this.detLineaService.findOne(id);
     if (!detLineas) {
       throw new HttpException('Det lineas no encontrado', HttpStatus.NOT_FOUND);

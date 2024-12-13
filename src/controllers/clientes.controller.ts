@@ -35,7 +35,7 @@ export class ClientesController {
   }
 
   @Get(':id')
-  async getCliente(@Param('id') id: string): Promise<Cliente> {
+  async getCliente(@Param('id') id: number): Promise<Cliente> {
     const cliente = await this.clientesService.findOne(id);
     if (!cliente) {
       throw new HttpException('Cliente no encontrado', HttpStatus.NOT_FOUND);
@@ -52,7 +52,7 @@ export class ClientesController {
 
   @Patch(':id')
   cambiarEstado(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Query('estado', ParseIntPipe) estado: number,
   ): Promise<Cliente> {
     return this.clientesService.cambiarEstado(id, estado);

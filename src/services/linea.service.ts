@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateLineaDTO } from 'src/DTOs/linea.dto';
 
 @Injectable()
 export class LineaServices {
@@ -25,26 +26,15 @@ export class LineaServices {
   async findLineaWithQuery(
     query: QueryDTO,
   ): Promise<{ data: Linea[]; total: number }> {
-    const validOrderFields = ['id', 'detalle'];
+    const validOrderFields = ['codLinea', 'detalle'];
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  findOne(id: string): Promise<Linea | null> {
+  findOne(id: number): Promise<Linea | null> {
     return this.lineaRepository.findOneBy({ id });
   }
 
-  async createLinea(data: Partial<Linea>): Promise<Linea> {
-    const lineaExistente = await this.lineaRepository.findOneBy({
-      detalle: data.detalle,
-    });
-
-    if (lineaExistente) {
-      throw new HttpException(
-        `La linea ${data.detalle} ya está registrada.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createLinea(data: CreateLineaDTO): Promise<Linea> {
     const newLinea = this.lineaRepository.create(data);
     return this.lineaRepository.save(newLinea);
   }

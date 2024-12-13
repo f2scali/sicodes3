@@ -10,7 +10,8 @@ import { IsUnique } from 'src/validators/isUnique-validator';
 export class CreateClienteDTO {
   @IsNotEmpty({ message: 'El campo CODIGO es requerido' })
   @IsString()
-  CODIGO: string;
+  @Validate(IsUnique, ['Cliente', 'codCliente'])
+  codCliente: string;
 
   @IsNotEmpty({ message: 'El campo NIT es requerido' })
   @IsString()

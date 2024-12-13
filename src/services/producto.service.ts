@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateProductoDTO } from 'src/DTOs/producto.dto';
 
 @Injectable()
 export class ProductoServices {
@@ -25,38 +26,33 @@ export class ProductoServices {
   async findProductosWithQuery(
     query: QueryDTO,
   ): Promise<{ data: Producto[]; total: number }> {
-    const validOrderFields = ['ID', 'DESCRIPCION', 'COSTO'];
+    const validOrderFields = [
+      'id_item',
+      'id_ext_item',
+      'descripcion',
+      'id_referencia',
+    ];
     return this.queryService.findWithQuery(query, validOrderFields);
   }
-  findOne(ID: number): Promise<Producto | null> {
-    return this.productoRepository.findOneBy({ ID });
+  findOne(id: number): Promise<Producto | null> {
+    return this.productoRepository.findOneBy({ id });
   }
 
-  findByProductoId(ID_Producto: string): Promise<Producto> {
-    return this.productoRepository.findOneBy({ ID_Producto });
-  }
-
-  async createProducto(data: Partial<Producto>): Promise<Producto> {
-    const { ID_ITEM, ID_EXT_ITM } = data;
-    const productoExistente = await this.productoRepository.findOne({
+  findByProductoId(id_item: string, id_ext_item: string): Promise<Producto> {
+    return this.productoRepository.findOne({
       where: {
-        ID_ITEM,
-        ID_EXT_ITM: ID_EXT_ITM || null,
+        id_item,
+        id_ext_item,
       },
     });
+  }
 
-    if (productoExistente) {
-      throw new HttpException(
-        `El producto ya está registrado.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createProducto(data: CreateProductoDTO): Promise<Producto> {
     const newProducto = this.productoRepository.create(data);
     return this.productoRepository.save(newProducto);
   }
 
-  async cambiarEstado(ID: number, estado: number): Promise<Producto> {
-    return this.estadoService.cambiarEstado('ID', ID, estado);
+  async cambiarEstado(id: number, estado: number): Promise<Producto> {
+    return this.estadoService.cambiarEstado('id', id, estado);
   }
 }

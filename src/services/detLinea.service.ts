@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
+import { CreateDetLineaDTO } from 'src/DTOs/detLinea.dto';
 
 @Injectable()
 export class DetLineaServices {
@@ -22,7 +23,7 @@ export class DetLineaServices {
     return this.estadoService.findAllActivos();
   }
 
-  findOne(id: string): Promise<DetLineas | null> {
+  findOne(id: number): Promise<DetLineas | null> {
     return this.detLineaRepository.findOneBy({ id });
   }
 
@@ -33,18 +34,7 @@ export class DetLineaServices {
     return this.queryService.findWithQuery(query, validOrderFields);
   }
 
-  async createDetLineas(data: Partial<DetLineas>): Promise<DetLineas> {
-    const detLineasExistente = await this.detLineaRepository.findOneBy({
-      detalle: data.detalle,
-    });
-
-    if (detLineasExistente) {
-      throw new HttpException(
-        `El detalle lineas ${data.detalle} ya está registrada.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async createDetLineas(data: CreateDetLineaDTO): Promise<DetLineas> {
     const newDetLineas = this.detLineaRepository.create(data);
     return this.detLineaRepository.save(newDetLineas);
   }

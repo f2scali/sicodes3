@@ -34,7 +34,7 @@ export class SubLineaController {
   }
 
   @Get(':id')
-  async getSubLineas(@Param('id') id: string): Promise<Sublinea> {
+  async getSubLineas(@Param('id') id: number): Promise<Sublinea> {
     const subLinea = await this.subLineaService.findOne(id);
     if (!subLinea) {
       throw new HttpException('Sublinea no encontrada', HttpStatus.NOT_FOUND);

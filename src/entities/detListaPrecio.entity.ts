@@ -14,17 +14,27 @@ import { ListaPrecios } from './listaPrecios.entity';
 export class DetalleListaPrecios {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
-  idProducto: string;
 
   @Column()
-  idListaPrecio: string;
+  idListaPrecio: number;
 
-  @Column('double')
-  PRECIO: Double;
+  @Column({ nullable: true })
+  cod_ListaPrecio: string;
+
+  @Column()
+  id_producto: number;
+
+  @Column({ nullable: true })
+  id_item: string;
+
+  @Column({ nullable: true })
+  id_ext_item: string;
+
+  @Column({ type: 'float', default: 0 })
+  PRECIO: number;
 
   @ManyToOne(() => Producto, (producto) => producto.id)
-  @JoinColumn({ name: 'idProducto' })
+  @JoinColumn({ name: 'id_producto' })
   producto: Producto;
 
   @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.id)
