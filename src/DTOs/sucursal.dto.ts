@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString, Validate } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Validate,
+} from 'class-validator';
 import { IsUnique } from 'src/validators/isUnique-validator';
 import { UniqueSucursalName } from 'src/validators/unique-sucusal-name.validator';
 
@@ -9,8 +15,8 @@ export class CreateSucursalDTO {
   codSucursal: string;
 
   @IsNotEmpty({ message: 'El id del cliente es requerido' })
-  @IsString()
-  id_Cliente: string;
+  @IsNumber()
+  id_Cliente: number;
 
   @IsNotEmpty({ message: 'El detalle de la sucursal es requerida' })
   @IsString()
