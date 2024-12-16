@@ -45,11 +45,6 @@ export class UsuariosController {
     return usuario;
   }
 
-  @Get('/rutas')
-  async getRutasByUsuario(@Req() req: any): Promise<Ruta[]> {
-    const usuario = req.user;
-    return await this.usuariosService.findRutasByUsuario(usuario.id);
-  }
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createUsuario(@Body() data: CreateUsuarioDTO): Promise<Usuario> {

@@ -18,6 +18,8 @@ import { CriterioModule } from './modules/criterio.module';
 import { PptoModule } from './modules/ppto.module';
 import { AuthModule } from './modules/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { RolModule } from './modules/rol.module';
+import { RutaModule } from './modules/ruta.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { ConfigModule } from '@nestjs/config';
     DetListaPrecioModule,
     PptoModule,
     AuthModule,
+    RolModule,
+    RutaModule,
   ],
   providers: [IsUnique],
 })

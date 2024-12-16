@@ -51,14 +51,4 @@ export class UsuariosServices {
   async cambiarEstado(id: number, estado: number): Promise<Usuario> {
     return this.estadoService.cambiarEstado('id', id, estado);
   }
-
-  async findRutasByUsuario(idUsuario: number): Promise<Ruta[]> {
-    const usuario = await this.usuariosRepository.findOne({
-      where: { id: idUsuario },
-      relations: ['roles', 'roles.rutas', 'roles.rutas.subrutas'],
-    });
-
-    if (!usuario) throw new NotFoundException('Usuario no encontrado');
-    return usuario.rol.rutas;
-  }
 }

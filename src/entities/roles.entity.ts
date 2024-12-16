@@ -17,7 +17,6 @@ export class Roles {
   descripcion: string;
 
   @ManyToMany(() => Ruta, (ruta) => ruta.roles)
-  @JoinTable()
   rutas: Ruta[];
 
   @ManyToMany(() => Menu, (menu) => menu.roles)

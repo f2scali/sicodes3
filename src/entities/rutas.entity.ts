@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Roles } from './roles.entity';
+import { Subruta } from './subRutas.entity';
 
 @Entity('tbl_Rutas')
 export class Ruta {
@@ -21,12 +22,8 @@ export class Ruta {
   @Column()
   path: string;
 
-  @ManyToOne(() => Ruta, (ruta) => ruta.subrutas, { nullable: true })
-  @JoinColumn({ name: 'id_ruta' })
-  rutaPadre: Ruta;
-
-  @OneToMany(() => Ruta, (ruta) => ruta.rutaPadre)
-  subrutas: Ruta[];
+  @OneToMany(() => Subruta, (subruta) => subruta.rutaPadre)
+  subrutas: Subruta[];
 
   @ManyToMany(() => Roles, (rol) => rol.rutas)
   @JoinTable({
