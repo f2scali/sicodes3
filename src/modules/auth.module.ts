@@ -5,13 +5,14 @@ import { AuthController } from 'src/controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Module({
   imports: [
     UsuarioModule,
     JwtModule.register({
       global: true,
-      secret: `${process.env.JWT_SECRET_KEY}`,
+      secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '1d' },
     }),
   ],

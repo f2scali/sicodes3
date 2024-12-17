@@ -20,7 +20,6 @@ import { AuthModule } from './modules/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { RolModule } from './modules/rol.module';
 import { RutaModule } from './modules/ruta.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
