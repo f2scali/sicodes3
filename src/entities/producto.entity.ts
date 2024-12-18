@@ -21,7 +21,7 @@ export class Producto {
   id_inventario: number;
 
   @Column({ nullable: true })
-  codInventario: number;
+  codInventario: string;
 
   @Column()
   id_item: string;
@@ -58,7 +58,7 @@ export class Producto {
   estado: number;
 
   @ManyToOne(() => TipoInventario, (tipo) => tipo.id)
-  @JoinColumn({ name: 'codInventario' })
+  @JoinColumn({ name: 'id_inventario' })
   tipoInventario: TipoInventario;
 
   @ManyToOne(() => UnidadMed, (unidad) => unidad.id)

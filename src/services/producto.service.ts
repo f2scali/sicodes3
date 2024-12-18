@@ -32,7 +32,9 @@ export class ProductoServices {
       'descripcion',
       'id_referencia',
     ];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['linea', 'criterio', 'unidadMed', 'tipoInventario'],
+    });
   }
   findOne(id: number): Promise<Producto | null> {
     return this.productoRepository.findOneBy({ id });

@@ -1,11 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  FindManyOptions,
-  FindOptionsRelationByString,
-  FindOptionsWhere,
-  FindOptionsWhereProperty,
-  Repository,
-} from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class EstadoService {

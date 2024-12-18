@@ -9,7 +9,7 @@ export class CreateProductoDTO {
   id_ext_item: string;
 
   @IsOptional()
-  codInventario: number;
+  codInventario: string;
 
   @IsOptional()
   id_referencia: string;
