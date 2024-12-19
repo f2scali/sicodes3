@@ -16,7 +16,7 @@ export class QueryService<T> {
       relations?: string[];
       relationFilters?: { [relation: string]: { [field: string]: any } };
     },
-  ): Promise<{ data: T[]; total: number }> {
+  ): Promise<{ data: T[]; total: number; totalPages: number }> {
     const { page = 1, limit = 10, search, orderBy, orderDirection } = query;
     const { relations = [], relationFilters = {} } = options || {};
     const skip = (page - 1) * limit;
@@ -65,6 +65,7 @@ export class QueryService<T> {
 
     const [data, total] = await queryBuilder.getManyAndCount();
 
-    return { data, total };
+    const totalPages = Math.ceil(total / limit);
+    return { data, total, totalPages };
   }
 }
