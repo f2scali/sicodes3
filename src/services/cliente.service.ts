@@ -31,8 +31,16 @@ export class ClientesServices {
   async findClientesWithQuery(
     query: QueryDTO,
   ): Promise<{ data: Cliente[]; total: number }> {
-    const validOrderFields = ['Descripcion', 'NIT'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    const validOrderFields = [
+      'Descripcion',
+      'NIT',
+      'tipoCliente.detalle',
+      'listaPrecios.detalle',
+      'vendedor.nombre',
+    ];
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['vendedor', 'listaPrecios', 'tipoCliente'],
+    });
   }
 
   findOne(id: number): Promise<Cliente | null> {

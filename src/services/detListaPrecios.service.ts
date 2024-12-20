@@ -40,7 +40,11 @@ export class DetListaPrecioServices {
   async findDetalleListaPreciosWithQuery(
     query: QueryDTO,
   ): Promise<{ data: DetalleListaPrecios[]; total: number }> {
-    const validOrderFields = ['PRECIO'];
+    const validOrderFields = [
+      'PRECIO',
+      'producto.descripcion',
+      'listaPrecios.detalle',
+    ];
     return this.queryService.findWithQuery(query, validOrderFields, {
       relations: ['producto', 'listaPrecios'],
       relationFilters: {

@@ -31,7 +31,9 @@ export class DetLineaServices {
     query: QueryDTO,
   ): Promise<{ data: DetLineas[]; total: number }> {
     const validOrderFields = ['ID', 'DESCRIPCION', 'COSTO'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['sublinea'],
+    });
   }
 
   async createDetLineas(data: CreateDetLineaDTO): Promise<DetLineas> {

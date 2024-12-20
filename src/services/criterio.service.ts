@@ -27,8 +27,10 @@ export class CriterioServices {
   async findCriterioWithQuery(
     query: QueryDTO,
   ): Promise<{ data: Criterio[]; total: number }> {
-    const validOrderFields = ['Detalle'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    const validOrderFields = ['entity.Detalle', 'tipoInventario.detalle'];
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['tipoInventario'],
+    });
   }
 
   findOne(id: number): Promise<Criterio | null> {

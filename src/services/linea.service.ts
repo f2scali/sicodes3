@@ -26,8 +26,14 @@ export class LineaServices {
   async findLineaWithQuery(
     query: QueryDTO,
   ): Promise<{ data: Linea[]; total: number }> {
-    const validOrderFields = ['codLinea', 'detalle'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    const validOrderFields = [
+      'entity.codLinea',
+      'entity.detalle',
+      'tipoInventario.detalle',
+    ];
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['tipoInventario'],
+    });
   }
 
   findOne(id: number): Promise<Linea | null> {

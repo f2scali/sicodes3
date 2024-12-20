@@ -28,8 +28,10 @@ export class UsuariosServices {
   async findUsuarioWithQuery(
     query: QueryDTO,
   ): Promise<{ data: Usuario[]; total: number }> {
-    const validOrderFields = ['id', 'usuario'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    const validOrderFields = ['id', 'usuario', 'rol.descripcion'];
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['rol'],
+    });
   }
 
   findOne(id: number): Promise<Usuario | undefined> {

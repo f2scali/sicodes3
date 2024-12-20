@@ -27,7 +27,9 @@ export class SubLineaServices {
     query: QueryDTO,
   ): Promise<{ data: Sublinea[]; total: number }> {
     const validOrderFields = ['id', 'detalle'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['linea'],
+    });
   }
 
   findOne(id: number): Promise<Sublinea | null> {

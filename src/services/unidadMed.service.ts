@@ -26,8 +26,10 @@ export class UnidadMedServices {
   async findUnidadMedWithQuery(
     query: QueryDTO,
   ): Promise<{ data: UnidadMed[]; total: number }> {
-    const validOrderFields = ['ID', 'Detalle'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    const validOrderFields = ['ID', 'entity.Detalle', 'tipoInventario.detalle'];
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['tipoInventario'],
+    });
   }
 
   findOne(id: number): Promise<UnidadMed | undefined> {

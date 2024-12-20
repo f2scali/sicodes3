@@ -31,6 +31,10 @@ export class ProductoServices {
       'id_ext_item',
       'descripcion',
       'id_referencia',
+      'linea.detalle',
+      'criterio.Detalle',
+      'unidadMed.Detalle',
+      'tipoInventario.detalle',
     ];
     return this.queryService.findWithQuery(query, validOrderFields, {
       relations: ['linea', 'criterio', 'unidadMed', 'tipoInventario'],
