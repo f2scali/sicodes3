@@ -33,6 +33,10 @@ export class VendedorController {
     return await this.vendedorService.findVendedorWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<Vendedor[]> {
+    return await this.vendedorService.findAllActivos();
+  }
   @Get(':id')
   async getVendedor(@Param('id') id: number): Promise<Vendedor> {
     const vendedor = await this.vendedorService.findOne(id);

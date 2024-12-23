@@ -35,6 +35,11 @@ export class TipoClienteController {
     return await this.tipoClienteService.findTipoClienteWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<TipoCliente[]> {
+    return await this.tipoClienteService.findAllActivos();
+  }
+
   @Get(':id')
   async getTipoCliente(@Param('id') id: number): Promise<TipoCliente> {
     const tipoCliente = await this.tipoClienteService.findOne(id);

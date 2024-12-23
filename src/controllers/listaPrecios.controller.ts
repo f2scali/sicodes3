@@ -33,6 +33,10 @@ export class ListaPreciosController {
     return await this.listaPreciosService.findListaPreciosWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<ListaPrecios[]> {
+    return await this.listaPreciosService.findAllActivos();
+  }
   @Get(':id')
   async getListaPrecios(@Param('id') id: number): Promise<ListaPrecios> {
     const listaPrecios = await this.listaPreciosService.findOne(id);
