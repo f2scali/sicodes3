@@ -22,7 +22,7 @@ export class Cliente {
   @Column({ nullable: true })
   id_Lista_Precio: number;
   @Column()
-  id_Vendedor: string;
+  id_Vendedor: number;
   @Column({ default: 1 })
   estado: number;
 

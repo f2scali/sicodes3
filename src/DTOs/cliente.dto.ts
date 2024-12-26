@@ -26,6 +26,6 @@ export class CreateClienteDTO {
   id_Lista_Precio: number;
 
   @IsNotEmpty({ message: 'El campo vendedor es obligatorio' })
-  @IsString()
-  id_Vendedor: string;
+  @IsNumber()
+  id_Vendedor: number;
 }
