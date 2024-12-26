@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -48,6 +49,15 @@ export class ClientesController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createCliente(@Body() data: CreateClienteDTO): Promise<Cliente> {
     return await this.clientesService.createCliente(data);
+  }
+
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateCliente(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateClienteDTO>,
+  ): Promise<Partial<Cliente>> {
+    return await this.clientesService.updateCliente(id, data);
   }
 
   @Patch(':id')

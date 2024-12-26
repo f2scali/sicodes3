@@ -26,15 +26,27 @@ export class Cliente {
   @Column({ default: 1 })
   estado: number;
 
-  @ManyToOne(() => Vendedor, (vendedor) => vendedor.id)
+  @ManyToOne(() => Vendedor, (vendedor) => vendedor.id, {
+    cascade: true,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'id_Vendedor' })
   vendedor: Vendedor;
 
-  @ManyToOne(() => TipoCliente, (tipoCliente) => tipoCliente.id)
+  @ManyToOne(() => TipoCliente, (tipoCliente) => tipoCliente.id, {
+    cascade: true,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'id_Tipo_Cliente' })
   tipoCliente: TipoCliente;
 
-  @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.id)
+  @ManyToOne(() => ListaPrecios, (listaPrecios) => listaPrecios.id, {
+    cascade: true,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'id_Lista_Precio' })
   listaPrecios: ListaPrecios;
 }

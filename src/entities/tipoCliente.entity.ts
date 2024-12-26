@@ -1,4 +1,11 @@
-import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
+import { Cliente } from './cliente.entity';
 
 @Entity('tbl_Tipo_Clientes')
 export class TipoCliente {
