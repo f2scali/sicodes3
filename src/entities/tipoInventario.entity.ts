@@ -8,7 +8,7 @@ export class TipoInventario {
   @Column({ nullable: true })
   codInventario: string;
   @Column()
-  detalle: string;
+  Detalle: string;
 
   @Column({ default: 1 })
   estado: number;

@@ -7,15 +7,13 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreateLineaDTO } from 'src/DTOs/linea.dto';
 import { CreateTipoInventarioDTO } from 'src/DTOs/tipoInventario.dto';
-import { Linea } from 'src/entities/linea.entity';
 import { TipoInventario } from 'src/entities/tipoInventario.entity';
-import { LineaServices } from 'src/services/linea.service';
 import { TipoInventarioServices } from 'src/services/tipoInventario.service';
 
 @Controller('tipoInventario')
@@ -55,6 +53,14 @@ export class TipoInventarioController {
     @Body() data: CreateTipoInventarioDTO,
   ): Promise<TipoInventario> {
     return await this.tipoInventarioService.createTipoInventario(data);
+  }
+
+  @Put('update-by-id/:id')
+  async updateTipoInventario(
+    @Param('id') id: number,
+    @Body() data: Partial<TipoInventario>,
+  ): Promise<TipoInventario> {
+    return await this.tipoInventarioService.updateTipoInventario(id, data);
   }
 
   @Patch(':id')

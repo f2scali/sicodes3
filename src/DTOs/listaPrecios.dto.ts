@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString, Validate } from 'class-validator';
 import { IsUnique } from 'src/validators/isUnique-validator';
 
 export class CreateListaPreciosDTO {
-  @IsNotEmpty({ message: 'Este campo es requerido' })
+  @IsNotEmpty({ message: 'El código es requerido' })
   @IsString()
   @Validate(IsUnique, ['ListaPrecios', 'codLista'])
   codLista: string;

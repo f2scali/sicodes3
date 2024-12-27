@@ -41,6 +41,27 @@ export class TipoInventarioServices {
     const newTipoInventario = this.tipoInventarioRepository.create(data);
     return this.tipoInventarioRepository.save(newTipoInventario);
   }
+  async updateTipoInventario(
+    id: number,
+    data: Partial<TipoInventario>,
+  ): Promise<TipoInventario> {
+    const tipoInventario = await this.tipoInventarioRepository.findOneBy({
+      id,
+    });
+
+    if (!tipoInventario) {
+      throw new HttpException(
+        'Tipo de Inventario no encontrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const updatedTipoInventario = this.tipoInventarioRepository.merge(
+      tipoInventario,
+      data,
+    );
+    return this.tipoInventarioRepository.save(updatedTipoInventario);
+  }
 
   async cambiarEstado(ID: number, estado: number): Promise<TipoInventario> {
     return this.estadoService.cambiarEstado('ID', ID, estado);
