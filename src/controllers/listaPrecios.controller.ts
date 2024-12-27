@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -58,6 +59,13 @@ export class ListaPreciosController {
     return await this.listaPreciosService.createListaPrecios(data);
   }
 
+  @Put('update-by-id/:id')
+  async updateListaPrecios(
+    @Param('id') id: number,
+    @Body() data: ListaPrecios,
+  ): Promise<ListaPrecios> {
+    return await this.listaPreciosService.updateListaPrecios(id, data);
+  }
   @Patch(':ID_LISTA')
   cambiarEstado(
     @Param('ID_LISTA') ID_LISTA: number,

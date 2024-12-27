@@ -39,6 +39,24 @@ export class ListaPreciosServices {
     return this.listaPreciosRepository.save(newListaPrecios);
   }
 
+  async updateListaPrecios(
+    id: number,
+    data: Partial<ListaPrecios>,
+  ): Promise<ListaPrecios> {
+    const listaPrecios = await this.listaPreciosRepository.findOneBy({ id });
+    if (!listaPrecios) {
+      throw new HttpException(
+        'Lista de precios no encontrada',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const updateListaPrecio = this.listaPreciosRepository.merge(
+      listaPrecios,
+      data,
+    );
+    return this.listaPreciosRepository.save(updateListaPrecio);
+  }
+
   async cambiarEstado(id: number, estado: number): Promise<ListaPrecios> {
     return this.estadoService.cambiarEstado('id', id, estado);
   }
