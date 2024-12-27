@@ -64,7 +64,7 @@ export class ClientesServices {
   async updateCliente(
     id: number,
     data: Partial<CreateClienteDTO>,
-  ): Promise<Partial<Cliente>> {
+  ): Promise<Cliente> {
     const cliente = await this.clientesRepository.findOne({
       where: { id },
       relations: ['vendedor', 'listaPrecios', 'tipoCliente'],

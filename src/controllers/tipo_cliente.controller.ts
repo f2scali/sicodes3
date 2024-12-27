@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -51,6 +52,14 @@ export class TipoClienteController {
     }
 
     return tipoCliente;
+  }
+
+  @Put('update-by-id/:id')
+  async updateTipoCliente(
+    @Param('id') id: number,
+    @Body() data: Partial<TipoCliente>,
+  ): Promise<TipoCliente> {
+    return await this.tipoClienteService.updateTipoCliente(id, data);
   }
 
   @Post()

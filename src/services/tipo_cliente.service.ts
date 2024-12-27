@@ -39,6 +39,26 @@ export class TipoClienteServices {
     return this.tipoClienteRepository.save(newTipoCliente);
   }
 
+  async updateTipoCliente(
+    id: number,
+    data: Partial<TipoCliente>,
+  ): Promise<TipoCliente> {
+    const tipoCliente = await this.tipoClienteRepository.findOneBy({ id });
+
+    if (!tipoCliente) {
+      throw new HttpException(
+        'Tipo de cliente no encontrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const updatedTipoCliente = this.tipoClienteRepository.merge(
+      tipoCliente,
+      data,
+    );
+    return this.tipoClienteRepository.save(updatedTipoCliente);
+  }
+
   async cambiarEstado(ID: number, estado: number): Promise<TipoCliente> {
     return this.estadoService.cambiarEstado('ID', ID, estado);
   }
