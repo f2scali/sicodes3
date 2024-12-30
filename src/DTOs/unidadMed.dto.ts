@@ -10,4 +10,8 @@ export class CreateUnidadMedDTO {
   @IsNotEmpty({ message: 'El detalle es requerido' })
   @IsString()
   Detalle: string;
+
+  @IsNotEmpty({ message: 'El inventario es requerido' })
+  @IsNumber()
+  id_tipo_inv: number;
 }

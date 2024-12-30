@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -33,6 +34,10 @@ export class UnidadMedController {
     return await this.unidadMedService.findUnidadMedWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<UnidadMed[]> {
+    return await this.unidadMedService.findAllActivos();
+  }
   @Get(':id')
   async getUnidadMed(@Param('id') id: number): Promise<UnidadMed> {
     const unidadMed = await this.unidadMedService.findOne(id);
@@ -50,6 +55,15 @@ export class UnidadMedController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createUnidadMed(@Body() data: CreateUnidadMedDTO): Promise<UnidadMed> {
     return await this.unidadMedService.createUnidadMed(data);
+  }
+
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateUnidadMed(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateUnidadMedDTO>,
+  ): Promise<Partial<UnidadMed>> {
+    return await this.unidadMedService.updateUnidadMed(id, data);
   }
 
   @Patch(':id')

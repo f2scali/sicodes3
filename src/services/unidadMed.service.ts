@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UnidadMed } from 'src/entities/unidadMed.entity';
 import { Repository } from 'typeorm';
@@ -6,6 +11,7 @@ import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { CreateUnidadMedDTO } from 'src/DTOs/unidadMed.dto';
+import { TipoInventario } from 'src/entities/tipoInventario.entity';
 
 @Injectable()
 export class UnidadMedServices {
@@ -14,6 +20,8 @@ export class UnidadMedServices {
   constructor(
     @InjectRepository(UnidadMed)
     private unidadMedRepository: Repository<UnidadMed>,
+    @InjectRepository(TipoInventario)
+    private tipoInventarioRepository: Repository<TipoInventario>,
   ) {
     this.estadoService = new EstadoService(this.unidadMedRepository);
     this.queryService = new QueryService(this.unidadMedRepository);
@@ -41,6 +49,36 @@ export class UnidadMedServices {
     return this.unidadMedRepository.save(newUnidadMed);
   }
 
+  async updateUnidadMed(
+    id: number,
+    data: Partial<CreateUnidadMedDTO>,
+  ): Promise<UnidadMed> {
+    const unidadMed = await this.unidadMedRepository.findOne({
+      where: { id },
+      relations: ['tipoInventario'],
+    });
+
+    if (data.id_tipo_inv) {
+      const tipoInventario = await this.tipoInventarioRepository.findOne({
+        where: { id: data.id_tipo_inv },
+      });
+      if (!tipoInventario) {
+        throw new NotFoundException(
+          `No se encontró el inventario con id ${data.id_tipo_inv}`,
+        );
+      }
+      unidadMed.tipoInventario = tipoInventario;
+    }
+
+    if (!unidadMed) {
+      throw new NotFoundException(
+        `No se encontró la unidad de medida con id ${id}`,
+      );
+    }
+
+    const updatedUnidadMed = this.unidadMedRepository.merge(unidadMed, data);
+    return this.unidadMedRepository.save(updatedUnidadMed);
+  }
   async cambiarEstado(ID: number, estado: number): Promise<UnidadMed> {
     return this.estadoService.cambiarEstado('ID', ID, estado);
   }
