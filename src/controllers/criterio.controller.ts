@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -36,6 +37,10 @@ export class CriterioController {
     return await this.criterioService.findCriterioWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<Criterio[]> {
+    return await this.criterioService.findAllActivos();
+  }
   @Get(':id')
   async getCriterio(@Param('id') id: number): Promise<Criterio> {
     const Criterio = await this.criterioService.findOne(id);
@@ -50,6 +55,15 @@ export class CriterioController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createCriterio(@Body() data: CreateCriterioDTO): Promise<Criterio> {
     return await this.criterioService.createCriterio(data);
+  }
+
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateLinea(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateCriterioDTO>,
+  ): Promise<Partial<Criterio>> {
+    return await this.criterioService.updateCriterio(id, data);
   }
 
   @Patch(':id')

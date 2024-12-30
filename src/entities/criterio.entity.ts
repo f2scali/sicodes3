@@ -12,7 +12,7 @@ export class Criterio {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   codCriterio: string;
   @Column()
   Detalle: string;

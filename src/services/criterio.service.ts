@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
@@ -6,6 +6,7 @@ import { Criterio } from 'src/entities/criterio.entity';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { QueryService } from './query.service';
 import { CreateCriterioDTO } from 'src/DTOs/criterio.dto';
+import { TipoInventario } from 'src/entities/tipoInventario.entity';
 
 @Injectable()
 export class CriterioServices {
@@ -15,6 +16,8 @@ export class CriterioServices {
   constructor(
     @InjectRepository(Criterio)
     private criterioRepository: Repository<Criterio>,
+    @InjectRepository(TipoInventario)
+    private tipoInventarioRepository: Repository<TipoInventario>,
   ) {
     this.estadoService = new EstadoService(this.criterioRepository);
     this.queryService = new QueryService(this.criterioRepository);
@@ -42,6 +45,34 @@ export class CriterioServices {
     return this.criterioRepository.save(newCriterio);
   }
 
+  async updateCriterio(
+    id: number,
+    data: Partial<CreateCriterioDTO>,
+  ): Promise<Criterio> {
+    const criterio = await this.criterioRepository.findOne({
+      where: { id },
+      relations: ['tipoInventario'],
+    });
+
+    if (data.id_tipo_inv) {
+      const tipoInventario = await this.tipoInventarioRepository.findOne({
+        where: { id: data.id_tipo_inv },
+      });
+      if (!tipoInventario) {
+        throw new NotFoundException(
+          `No se encontró el inventario con id ${data.id_tipo_inv}`,
+        );
+      }
+      criterio.tipoInventario = tipoInventario;
+    }
+
+    if (!criterio) {
+      throw new NotFoundException(`No se encontró el cliente con id ${id}`);
+    }
+
+    const updatedCriterio = this.criterioRepository.merge(criterio, data);
+    return this.criterioRepository.save(updatedCriterio);
+  }
   async cambiarEstado(id: number, estado: number): Promise<Criterio> {
     return this.estadoService.cambiarEstado('id', id, estado);
   }

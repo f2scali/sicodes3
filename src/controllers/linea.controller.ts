@@ -56,7 +56,7 @@ export class LineaController {
 
   @Put('update-by-id/:id')
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async updateCliente(
+  async updateLinea(
     @Param('id') id: number,
     @Body() data: Partial<CreateLineaDTO>,
   ): Promise<Partial<Linea>> {
