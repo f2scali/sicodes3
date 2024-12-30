@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -33,6 +34,10 @@ export class LineaController {
     return await this.lineaService.findLineaWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<Linea[]> {
+    return await this.lineaService.findAllActivos();
+  }
   @Get(':id')
   async getLineas(@Param('id') id: number): Promise<Linea> {
     const linea = await this.lineaService.findOne(id);
@@ -49,6 +54,14 @@ export class LineaController {
     return await this.lineaService.createLinea(data);
   }
 
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateCliente(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateLineaDTO>,
+  ): Promise<Partial<Linea>> {
+    return await this.lineaService.updateLinea(id, data);
+  }
   @Patch(':id')
   cambiarEstado(
     @Param('id') id: number,

@@ -34,6 +34,11 @@ export class TipoInventarioController {
     return await this.tipoInventarioService.findTipoInventarioWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<TipoInventario[]> {
+    return await this.tipoInventarioService.findAllActivos();
+  }
+
   @Get(':id')
   async getTipoInventarios(@Param('id') id: number): Promise<TipoInventario> {
     const tipoInventario = await this.tipoInventarioService.findOne(id);

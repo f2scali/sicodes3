@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Validate } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Validate } from 'class-validator';
 import { IsUnique } from 'src/validators/isUnique-validator';
 
 export class CreateLineaDTO {
@@ -10,4 +10,8 @@ export class CreateLineaDTO {
   @IsNotEmpty({ message: 'El detalle es requerido' })
   @IsString()
   detalle: string;
+
+  @IsNotEmpty({ message: 'El tipo de inventario es requerido' })
+  @IsNumber()
+  id_tipo_inv: number;
 }
