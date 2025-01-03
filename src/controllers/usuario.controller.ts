@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Req,
   UsePipes,
@@ -35,6 +36,11 @@ export class UsuariosController {
     return await this.usuariosService.findUsuarioWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<Usuario[]> {
+    return await this.usuariosService.findAllActivos();
+  }
+
   @Get(':id')
   async getUsuario(@Param('id') id: number): Promise<Usuario> {
     const usuario = await this.usuariosService.findOne(id);
@@ -49,6 +55,15 @@ export class UsuariosController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createUsuario(@Body() data: CreateUsuarioDTO): Promise<Usuario> {
     return await this.usuariosService.createUsuario(data);
+  }
+
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateUsuario(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateUsuarioDTO>,
+  ): Promise<Partial<CreateUsuarioDTO>> {
+    return await this.usuariosService.updateUsuario(id, data);
   }
 
   @Patch(':id')

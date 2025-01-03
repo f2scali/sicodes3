@@ -7,7 +7,7 @@ import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import * as bcrypt from 'bcrypt';
 import { CreateUsuarioDTO } from 'src/DTOs/usuario.dto';
-import { Ruta } from 'src/entities/rutas.entity';
+import { Roles } from 'src/entities/roles.entity';
 
 @Injectable()
 export class UsuariosServices {
@@ -16,6 +16,8 @@ export class UsuariosServices {
   constructor(
     @InjectRepository(Usuario)
     private usuariosRepository: Repository<Usuario>,
+    @InjectRepository(Roles)
+    private rolesRepository: Repository<Roles>,
   ) {
     this.estadoService = new EstadoService(this.usuariosRepository);
     this.queryService = new QueryService(this.usuariosRepository);
@@ -50,6 +52,39 @@ export class UsuariosServices {
     return this.usuariosRepository.save(newUsuario);
   }
 
+  async updateUsuario(
+    id: number,
+    data: Partial<CreateUsuarioDTO>,
+  ): Promise<Usuario> {
+    const usuario = await this.usuariosRepository.findOne({
+      where: { id },
+      relations: ['rol'],
+    });
+
+    if (data.id_rol) {
+      const rol = await this.rolesRepository.findOne({
+        where: { id: data.id_rol },
+        select: ['id', 'descripcion'],
+      });
+      if (!rol) {
+        throw new NotFoundException(
+          `No se encontró el rol con id ${data.id_rol}`,
+        );
+      }
+      usuario.rol = rol;
+    }
+
+    if (data.contraseña) {
+      const saltRounds = 10;
+      data.contraseña = await bcrypt.hash(data.contraseña, saltRounds);
+    }
+    if (!usuario) {
+      throw new NotFoundException(`No se encontró el usuario con id ${id}`);
+    }
+
+    const updatedUsuario = this.usuariosRepository.merge(usuario, data);
+    return this.usuariosRepository.save(updatedUsuario);
+  }
   async cambiarEstado(id: number, estado: number): Promise<Usuario> {
     return this.estadoService.cambiarEstado('id', id, estado);
   }
