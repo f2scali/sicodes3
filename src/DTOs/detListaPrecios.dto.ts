@@ -1,7 +1,18 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Double } from 'typeorm';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Validate,
+} from 'class-validator';
+import { IsUnique } from 'src/validators/isUnique-validator';
 
 export class CreateDetListaPrecioDTO {
+  @IsNotEmpty({ message: 'Este campo es requerido' })
+  @IsString()
+  @Validate(IsUnique, ['DetalleListaPrecios', 'cod_ListaPrecio'])
+  cod_ListaPrecio: string;
+
   @IsNotEmpty({ message: 'El id del producto es requerido' })
   @IsNumber()
   id_producto: number;

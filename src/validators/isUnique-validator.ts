@@ -11,6 +11,7 @@ const fieldName: Record<string, string> = {
   NIT: 'El NIT',
   usuario: 'El usuario',
   codVendedor: 'El código del vendedor',
+  cod_ListaPrecio: 'El código',
 };
 @ValidatorConstraint({ name: 'IsUniqueConstraint', async: true })
 @Injectable()
