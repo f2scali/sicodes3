@@ -38,18 +38,18 @@ export class Producto {
   @Column()
   unimed_inv_1: number;
 
-  @Column()
+  @Column({ nullable: true })
   cod_unimed_inv_1: string;
   @Column()
   id_linea: number;
 
-  @Column()
+  @Column({ nullable: true })
   cod_linea: string;
 
   @Column({ nullable: true })
   id_cricla1: number;
 
-  @Column()
+  @Column({ nullable: true })
   cod_cricla1: string;
   @Column({ type: 'float', default: 0 })
   costo: number;

@@ -28,5 +28,5 @@ export class CreateProductoDTO {
 
   @IsNotEmpty({ message: 'El costo del producto es requerido' })
   @IsNumber()
-  COSTO: number;
+  costo: number;
 }
