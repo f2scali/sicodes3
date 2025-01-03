@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -53,6 +54,14 @@ export class VendedorController {
     return await this.vendedorService.createVendedor(data);
   }
 
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateVendedor(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateVendedorDTO>,
+  ): Promise<Partial<Vendedor>> {
+    return await this.vendedorService.updateVendedor(id, data);
+  }
   @Patch(':id')
   cambiarEstado(
     @Param('id') id: number,

@@ -69,6 +69,35 @@ export class VendedorServices {
     return this.vendedorRepository.save(newVendedor);
   }
 
+  async updateVendedor(
+    id: number,
+    data: Partial<CreateVendedorDTO>,
+  ): Promise<Vendedor> {
+    const vendedor = await this.vendedorRepository.findOne({
+      where: { id },
+      relations: ['usuario'],
+    });
+
+    if (data.idUsuario) {
+      const usuario = await this.usuarioRepository.findOne({
+        where: { id: data.idUsuario },
+      });
+      if (!usuario) {
+        throw new NotFoundException(
+          `No se encontró el usuario con id ${data.idUsuario}`,
+        );
+      }
+      vendedor.usuario = usuario;
+    }
+
+    if (!vendedor) {
+      throw new NotFoundException(`No se encontró el vendedor con id ${id}`);
+    }
+
+    const updatedVendedor = this.vendedorRepository.merge(vendedor, data);
+    return this.vendedorRepository.save(updatedVendedor);
+  }
+
   async cambiarEstado(id: number, estado: number): Promise<Vendedor> {
     const result = await this.vendedorRepository.findOne({
       where: { id },
