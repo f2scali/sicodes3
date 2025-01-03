@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -33,6 +34,10 @@ export class ProductosController {
     return await this.productoService.findProductosWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<Producto[]> {
+    return await this.productoService.findAllActive();
+  }
   @Get(':id')
   async getProducto(@Param('id') id: number): Promise<Producto> {
     const producto = await this.productoService.findOne(id);
@@ -68,6 +73,15 @@ export class ProductosController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createProducto(@Body() data: CreateProductoDTO): Promise<Producto> {
     return await this.productoService.createProducto(data);
+  }
+
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateProducto(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateProductoDTO>,
+  ): Promise<Partial<Producto>> {
+    return await this.productoService.updateProducto(id, data);
   }
 
   @Patch(':ID_Producto')
