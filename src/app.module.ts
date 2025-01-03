@@ -8,7 +8,6 @@ import { ListaPreciosModule } from './modules/listaPrecios.module';
 import { SucursalModule } from './modules/sucursal.module';
 import { UnidadMedModule } from './modules/unidadMed.module';
 import { LineaModule } from './modules/linea.module';
-import { SubLineaModule } from './modules/subLinea.module';
 import { DetLineaModule } from './modules/detLinea.module';
 import { TipoInventarioModule } from './modules/tipoInventario.module';
 import { ProductoModule } from './modules/producto.module';
@@ -20,6 +19,7 @@ import { AuthModule } from './modules/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { RolModule } from './modules/rol.module';
 import { RutaModule } from './modules/ruta.module';
+import { SubLineaModule } from './modules/subLinea.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

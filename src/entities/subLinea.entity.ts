@@ -4,7 +4,6 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  PrimaryColumn,
 } from 'typeorm';
 import { Linea } from './linea.entity';
 
@@ -17,7 +16,7 @@ export class Sublinea {
   @Column()
   detalle: string;
   @Column()
-  id_linea: string;
+  id_linea: number;
   @Column({ default: 1 })
   estado: number;
 

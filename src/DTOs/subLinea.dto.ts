@@ -4,7 +4,7 @@ import { IsUnique } from 'src/validators/isUnique-validator';
 export class CreateSubLineaDTO {
   @IsNotEmpty({ message: 'El ID es requerido' })
   @IsString()
-  @Validate(IsUnique, ['SubLinea', 'codSublinea'])
+  @Validate(IsUnique, ['Sublinea', 'codSublinea'])
   codSublinea: string;
 
   @IsNotEmpty({ message: 'El detalle es requerido' })
@@ -12,6 +12,6 @@ export class CreateSubLineaDTO {
   detalle: string;
 
   @IsNotEmpty({ message: 'La linea es requerida' })
-  @IsString()
-  id_linea: string;
+  @IsNumber()
+  id_linea: number;
 }

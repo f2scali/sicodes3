@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -33,6 +34,11 @@ export class SubLineaController {
     return await this.subLineaService.findSublineaWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<Sublinea[]> {
+    return await this.subLineaService.findAllActivos();
+  }
+
   @Get(':id')
   async getSubLineas(@Param('id') id: number): Promise<Sublinea> {
     const subLinea = await this.subLineaService.findOne(id);
@@ -49,6 +55,14 @@ export class SubLineaController {
     return await this.subLineaService.createSublinea(data);
   }
 
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateSublinea(
+    @Param('id') id: number,
+    @Body() data: Partial<Sublinea>,
+  ): Promise<Sublinea> {
+    return await this.subLineaService.updateSublinea(id, data);
+  }
   @Patch(':id')
   cambiarEstado(
     @Param('id') id: number,
