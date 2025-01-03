@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -43,12 +44,24 @@ export class DetLineaController {
     return detLineas;
   }
 
+  @Get('all')
+  async getAllDetLineas(): Promise<DetLineas[]> {
+    return await this.detLineaService.findAllActivos();
+  }
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createDetLineas(@Body() data: CreateDetLineaDTO): Promise<DetLineas> {
     return await this.detLineaService.createDetLineas(data);
   }
 
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateDetLinea(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateDetLineaDTO>,
+  ): Promise<Partial<DetLineas>> {
+    return await this.detLineaService.updateDetLineas(id, data);
+  }
   @Patch(':id')
   cambiarEstado(
     @Param('id') id: number,
