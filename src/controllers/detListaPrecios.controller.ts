@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -36,6 +37,10 @@ export class DetListaPrecioController {
     );
   }
 
+  @Get('all')
+  async findAll(): Promise<DetalleListaPrecios[]> {
+    return await this.detListaPrecioService.findAllActivos();
+  }
   @Get('/byIds/:idProducto/:idLista')
   async findByProductAndLista(
     @Param('idProducto', ParseIntPipe) idProducto: number,
@@ -61,6 +66,13 @@ export class DetListaPrecioController {
     return await this.detListaPrecioService.createDetalleListaPrecios(data);
   }
 
+  @Put('update-by-id/:id')
+  async updateDetListaPrecios(
+    @Param('id') id: number,
+    @Body() data: DetalleListaPrecios,
+  ): Promise<DetalleListaPrecios> {
+    return await this.detListaPrecioService.updateDetalleListaPrecios(id, data);
+  }
   @Patch(':ID_Producto/:id_Lista_Precios')
   cambiarEstado(
     @Query('id_item') id_item: string,

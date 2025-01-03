@@ -21,6 +21,12 @@ export class DetListaPrecioServices {
   constructor(
     @InjectRepository(DetalleListaPrecios)
     private detalleListaPrecioRepository: Repository<DetalleListaPrecios>,
+
+    @InjectRepository(Producto)
+    private productoRepository: Repository<Producto>,
+
+    @InjectRepository(ListaPrecios)
+    private listaPreciosRepository: Repository<ListaPrecios>,
   ) {
     this.estadoService = new EstadoService(this.detalleListaPrecioRepository);
     this.queryService = new QueryService(this.detalleListaPrecioRepository);
@@ -66,7 +72,6 @@ export class DetListaPrecioServices {
       relations: ['producto', 'listaPrecios'],
     });
 
-    console.log(results.length);
     if (!results.length) {
       throw new HttpException(
         `No se encontraron registros activos.`,
@@ -85,6 +90,47 @@ export class DetListaPrecioServices {
     return this.detalleListaPrecioRepository.save(newDetalleListaPrecios);
   }
 
+  async updateDetalleListaPrecios(
+    id: number,
+    data: Partial<CreateDetListaPrecioDTO>,
+  ): Promise<DetalleListaPrecios> {
+    const detalleListaPrecios = await this.detalleListaPrecioRepository.findOne(
+      {
+        where: { id },
+        relations: ['producto', 'listaPrecios'],
+      },
+    );
+
+    if (data.id_producto) {
+      const producto = await this.productoRepository.findOne({
+        where: { id: data.id_producto },
+      });
+      if (!producto) {
+        throw new NotFoundException(
+          `No se encontró el producto con id ${data.id_producto}`,
+        );
+      }
+      detalleListaPrecios.producto = producto;
+    }
+
+    if (data.idListaPrecio) {
+      const listaPrecio = await this.listaPreciosRepository.findOne({
+        where: { id: data.idListaPrecio },
+      });
+      if (!listaPrecio) {
+        throw new NotFoundException(
+          `No se encontró la lista de precio con id ${data.idListaPrecio}`,
+        );
+      }
+      detalleListaPrecios.listaPrecios = listaPrecio;
+    }
+
+    const updatedDetalleListaPrecios = this.detalleListaPrecioRepository.merge(
+      detalleListaPrecios,
+      data,
+    );
+    return this.detalleListaPrecioRepository.save(updatedDetalleListaPrecios);
+  }
   async cambiarEstado(
     id_item: string,
     id_ext_item: string,
