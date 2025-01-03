@@ -49,7 +49,10 @@ export class DetLineaServices {
     id: number,
     data: Partial<DetLineas>,
   ): Promise<DetLineas> {
-    const detLinea = await this.detLineaRepository.findOneBy({ id });
+    const detLinea = await this.detLineaRepository.findOne({
+      where: { id },
+      relations: ['sublinea'],
+    });
     if (!detLinea) {
       throw new HttpException(
         'Detalle de sublinea no encontrada',

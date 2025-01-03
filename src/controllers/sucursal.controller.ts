@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -49,12 +50,24 @@ export class SucursalController {
     return sucursal;
   }
 
+  @Get('all')
+  async findAll(): Promise<Sucursal[]> {
+    return await this.sucursalService.findAllActivos();
+  }
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async createSucursal(@Body() data: CreateSucursalDTO): Promise<Sucursal> {
     return await this.sucursalService.createSucursal(data);
   }
 
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateSucursal(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateSucursalDTO>,
+  ): Promise<Partial<Sucursal>> {
+    return await this.sucursalService.updateSucursal(id, data);
+  }
   @Patch(':id')
   cambiarEstado(
     @Param('id') id: number,
