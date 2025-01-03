@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -56,5 +57,14 @@ export class PptoController {
     @Query('estado', ParseIntPipe) estado: number,
   ): Promise<Ppto> {
     return this.pptoService.cambiarEstado(id, estado);
+  }
+
+  @Put('update-by-id/:id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updatePpto(
+    @Param('id') id: number,
+    @Body() data: Partial<CreatePptoDTO>,
+  ): Promise<Partial<Ppto>> {
+    return await this.pptoService.updatePpto(id, data);
   }
 }

@@ -7,17 +7,17 @@ export class CreatePptoDTO {
 
   @IsNotEmpty({ message: 'El AÑO es requerido' })
   @IsString()
-  AÑO: string;
+  Año: string;
 
   @IsNotEmpty({ message: 'El mes es requerido' })
   @IsString()
-  MES: string;
+  Mes: string;
 
   @IsNotEmpty({ message: 'La cuota es requerida' })
   @IsString()
-  CUOTA: string;
+  Cuota: string;
 
   @IsOptional()
   @IsString()
-  VENTAS: string;
+  Ventas: string;
 }

@@ -16,16 +16,16 @@ export class Ppto {
   id_Vendedor: number;
 
   @Column()
-  AÑO: string;
+  Año: string;
 
   @Column()
-  MES: string;
+  Mes: string;
 
   @Column()
-  CUOTA: string;
+  Cuota: string;
 
   @Column({ nullable: true })
-  VENTAS: string;
+  Ventas: string;
 
   @Column({ default: 1 })
   estado: number;

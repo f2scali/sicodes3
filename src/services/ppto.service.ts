@@ -12,6 +12,7 @@ import { QueryDTO } from 'src/DTOs/query.dto';
 import { QueryService } from './query.service';
 import { Ppto } from 'src/entities/ppto.entity';
 import { CreatePptoDTO } from 'src/DTOs/ppto.dto';
+import { Vendedor } from 'src/entities/vendedor.entity';
 
 @Injectable()
 export class PptoServices {
@@ -20,6 +21,9 @@ export class PptoServices {
   constructor(
     @InjectRepository(Ppto)
     private pptoRepository: Repository<Ppto>,
+
+    @InjectRepository(Vendedor)
+    private vendedorRepository: Repository<Vendedor>,
   ) {
     this.estadoService = new EstadoService(this.pptoRepository);
     this.queryService = new QueryService(this.pptoRepository);
@@ -45,6 +49,29 @@ export class PptoServices {
     return this.pptoRepository.save(newPpto);
   }
 
+  async updatePpto(id: number, data: Partial<CreatePptoDTO>): Promise<Ppto> {
+    const presupuesto = await this.pptoRepository.findOne({
+      where: { id },
+      relations: ['vendedor'],
+    });
+
+    if (data.id_Vendedor) {
+      const vendedor = await this.vendedorRepository.findOne({
+        where: { id: data.id_Vendedor },
+      });
+      if (!vendedor) {
+        throw new NotFoundException(`No se encontró el vendedor`);
+      }
+      presupuesto.vendedor = vendedor;
+    }
+
+    if (!presupuesto) {
+      throw new NotFoundException(`No se encontró el presupuesto`);
+    }
+
+    const updatedPpto = this.pptoRepository.merge(presupuesto, data);
+    return this.pptoRepository.save(updatedPpto);
+  }
   async cambiarEstado(id: number, estado: number): Promise<Ppto> {
     const result = await this.pptoRepository.findOne({
       where: { id },
