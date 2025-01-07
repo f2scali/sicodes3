@@ -37,7 +37,9 @@ export class PptoServices {
     query: QueryDTO,
   ): Promise<{ data: Ppto[]; total: number }> {
     const validOrderFields = ['id_Vendedor', 'AÑO'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['vendedor'],
+    });
   }
 
   findOne(id: number): Promise<Ppto | null> {
