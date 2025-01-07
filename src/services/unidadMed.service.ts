@@ -79,7 +79,7 @@ export class UnidadMedServices {
     const updatedUnidadMed = this.unidadMedRepository.merge(unidadMed, data);
     return this.unidadMedRepository.save(updatedUnidadMed);
   }
-  async cambiarEstado(ID: number, estado: number): Promise<UnidadMed> {
-    return this.estadoService.cambiarEstado('ID', ID, estado);
+  async cambiarEstado(id: number, estado: number): Promise<UnidadMed> {
+    return this.estadoService.cambiarEstado('id', id, estado);
   }
 }
