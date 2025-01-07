@@ -12,7 +12,7 @@ export class Sucursal {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   codSucursal: string;
 
   @Column()

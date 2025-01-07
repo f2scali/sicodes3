@@ -36,7 +36,9 @@ export class SucursalServices {
     query: QueryDTO,
   ): Promise<{ data: Sucursal[]; total: number }> {
     const validOrderFields = ['ID', 'Descripcion', 'Telefono', 'Direccion'];
-    return this.queryService.findWithQuery(query, validOrderFields);
+    return this.queryService.findWithQuery(query, validOrderFields, {
+      relations: ['cliente'],
+    });
   }
 
   findOne(id: number): Promise<Sucursal | null> {

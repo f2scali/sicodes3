@@ -35,6 +35,10 @@ export class ClientesController {
     return await this.clientesService.findClientesWithQuery(query);
   }
 
+  @Get('all')
+  async findAll(): Promise<Cliente[]> {
+    return await this.clientesService.findAllActivos();
+  }
   @Get(':id')
   async getCliente(@Param('id') id: number): Promise<Cliente> {
     const cliente = await this.clientesService.findOne(id);

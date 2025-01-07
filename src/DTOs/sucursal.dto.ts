@@ -9,7 +9,7 @@ import { IsUnique } from 'src/validators/isUnique-validator';
 import { UniqueSucursalName } from 'src/validators/unique-sucusal-name.validator';
 
 export class CreateSucursalDTO {
-  @IsNotEmpty({ message: 'El id de la sucursal es requerido' })
+  @IsOptional()
   @IsString()
   @Validate(IsUnique, ['Sucursal', 'codSucursal'])
   codSucursal: string;
