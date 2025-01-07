@@ -63,7 +63,7 @@ export class TipoInventarioServices {
     return this.tipoInventarioRepository.save(updatedTipoInventario);
   }
 
-  async cambiarEstado(ID: number, estado: number): Promise<TipoInventario> {
-    return this.estadoService.cambiarEstado('ID', ID, estado);
+  async cambiarEstado(id: number, estado: number): Promise<TipoInventario> {
+    return this.estadoService.cambiarEstado('id', id, estado);
   }
 }
