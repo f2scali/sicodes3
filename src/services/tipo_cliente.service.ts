@@ -59,7 +59,7 @@ export class TipoClienteServices {
     return this.tipoClienteRepository.save(updatedTipoCliente);
   }
 
-  async cambiarEstado(ID: number, estado: number): Promise<TipoCliente> {
-    return this.estadoService.cambiarEstado('ID', ID, estado);
+  async cambiarEstado(id: number, estado: number): Promise<TipoCliente> {
+    return this.estadoService.cambiarEstado('id', id, estado);
   }
 }

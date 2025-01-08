@@ -132,14 +132,15 @@ export class DetListaPrecioServices {
     return this.detalleListaPrecioRepository.save(updatedDetalleListaPrecios);
   }
   async cambiarEstado(
-    id_item: string,
-    id_ext_item: string,
+    id: number,
+    idProducto: number,
     idListaPrecio: number,
     estado: number,
   ): Promise<DetalleListaPrecios> {
     const result = await this.detalleListaPrecioRepository.findOne({
       where: {
-        producto: { id_item, id_ext_item },
+        id,
+        producto: { id: idProducto },
         listaPrecios: { id: idListaPrecio },
       },
       relations: ['producto', 'listaPrecios'],
@@ -147,16 +148,8 @@ export class DetListaPrecioServices {
 
     if (!result) {
       throw new NotFoundException(
-        `No se encontró registro ${id_item}` + id_ext_item
-          ? ` y ${id_ext_item}`
-          : '',
-      );
-    }
-
-    if (result.producto.estado === 1 || result.listaPrecios.estado === 1) {
-      throw new HttpException(
-        `No se puede inactivar porque el producto o la lista de precios están activos.`,
-        HttpStatus.BAD_REQUEST,
+        `No se encontró registro 
+        `,
       );
     }
 

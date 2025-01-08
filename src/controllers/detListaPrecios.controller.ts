@@ -73,16 +73,16 @@ export class DetListaPrecioController {
   ): Promise<DetalleListaPrecios> {
     return await this.detListaPrecioService.updateDetalleListaPrecios(id, data);
   }
-  @Patch(':ID_Producto/:id_Lista_Precios')
+  @Patch(':id')
   cambiarEstado(
-    @Query('id_item') id_item: string,
-    @Query('id_ext_item') id_ext_item: string,
-    @Param('id_Lista_Precios') id_Lista_Precios: number,
+    @Param('id') id: number,
+    @Query('producto') id_producto: number,
+    @Query('listaPrecios') id_Lista_Precios: number,
     @Query('estado', ParseIntPipe) estado: number,
   ): Promise<DetalleListaPrecios> {
     return this.detListaPrecioService.cambiarEstado(
-      id_item,
-      id_ext_item,
+      id,
+      id_producto,
       id_Lista_Precios,
       estado,
     );

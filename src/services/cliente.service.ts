@@ -123,16 +123,6 @@ export class ClientesServices {
       throw new NotFoundException(`No se encontró el cliente `);
     }
 
-    if (
-      result.listaPrecios.estado === 1 ||
-      result.vendedor.estado === 1 ||
-      result.tipoCliente.estado === 1
-    ) {
-      throw new HttpException(
-        `No se puede inactivar el cliente.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
     return this.estadoService.cambiarEstado('id', id, estado);
   }
 }
