@@ -6,12 +6,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UnidadMed } from 'src/entities/unidadMed.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { CreateUnidadMedDTO } from 'src/DTOs/unidadMed.dto';
 import { TipoInventario } from 'src/entities/tipoInventario.entity';
+import { Producto } from 'src/entities/producto.entity';
 
 @Injectable()
 export class UnidadMedServices {
@@ -22,8 +23,16 @@ export class UnidadMedServices {
     private unidadMedRepository: Repository<UnidadMed>,
     @InjectRepository(TipoInventario)
     private tipoInventarioRepository: Repository<TipoInventario>,
+
+    @InjectRepository(Producto)
+    private productoRepository: Repository<Producto>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.unidadMedRepository);
+    this.estadoService = new EstadoService(
+      this.unidadMedRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.unidadMedRepository);
   }
 
@@ -80,6 +89,25 @@ export class UnidadMedServices {
     return this.unidadMedRepository.save(updatedUnidadMed);
   }
   async cambiarEstado(id: number, estado: number): Promise<UnidadMed> {
-    return this.estadoService.cambiarEstado('id', id, estado);
+    const unidadMed = await this.unidadMedRepository.findOne({
+      where: { id },
+      relations: ['productos'],
+    });
+
+    if (!unidadMed) {
+      throw new NotFoundException(`unidadMed with ID ${id} not found`);
+    }
+
+    unidadMed.estado = parseInt(estado as any);
+    await this.unidadMedRepository.save(unidadMed);
+
+    if (unidadMed.productos?.length) {
+      for (const producto of unidadMed.productos) {
+        producto.estado = parseInt(estado as any);
+        await this.productoRepository.save(producto);
+      }
+    }
+
+    return unidadMed;
   }
 }

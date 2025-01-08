@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cliente } from 'src/entities/cliente.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { QueryService } from './query.service';
@@ -28,8 +28,12 @@ export class ClientesServices {
     private readonly tipoClienteRepository: Repository<TipoCliente>,
     @InjectRepository(ListaPrecios)
     private readonly listaPreciosRepository: Repository<ListaPrecios>,
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.clientesRepository);
+    this.estadoService = new EstadoService(
+      this.clientesRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.clientesRepository);
   }
 

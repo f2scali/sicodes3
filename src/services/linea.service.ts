@@ -6,12 +6,16 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Linea } from 'src/entities/linea.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { CreateLineaDTO } from 'src/DTOs/linea.dto';
+import { DetLineas } from 'src/entities/detLinea.entity';
+import { Sublinea } from 'src/entities/subLinea.entity';
 import { TipoInventario } from 'src/entities/tipoInventario.entity';
+import { Producto } from 'src/entities/producto.entity';
+import { DetalleListaPrecios } from 'src/entities/detListaPrecio.entity';
 
 @Injectable()
 export class LineaServices {
@@ -22,8 +26,21 @@ export class LineaServices {
     private lineaRepository: Repository<Linea>,
     @InjectRepository(TipoInventario)
     private tipoInventarioRepository: Repository<TipoInventario>,
+    @InjectRepository(Sublinea)
+    private sublineaRepository: Repository<Sublinea>,
+
+    @InjectRepository(DetLineas)
+    private readonly detLineasRepository: Repository<DetLineas>,
+
+    @InjectRepository(Producto)
+    private readonly productoRepository: Repository<Producto>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.lineaRepository);
+    this.estadoService = new EstadoService(
+      this.lineaRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.lineaRepository);
   }
 
@@ -80,6 +97,44 @@ export class LineaServices {
   }
 
   async cambiarEstado(id: number, estado: number): Promise<Linea> {
-    return this.estadoService.cambiarEstado('id', id, estado);
+    const linea = await this.lineaRepository.findOne({
+      where: { id },
+      relations: [
+        'sublineas',
+        'sublineas.detLineas',
+        'productos',
+        'detListaPrecios',
+      ],
+    });
+
+    if (!linea) {
+      throw new NotFoundException(`linea with ID ${id} not found`);
+    }
+
+    linea.estado = parseInt(estado as any);
+    await this.lineaRepository.save(linea);
+
+    if (linea.sublineas?.length) {
+      for (const sublinea of linea.sublineas) {
+        sublinea.estado = parseInt(estado as any);
+        await this.sublineaRepository.save(sublinea);
+
+        if (sublinea.detLineas?.length) {
+          for (const detLinea of sublinea.detLineas) {
+            detLinea.estado = parseInt(estado as any);
+            await this.detLineasRepository.save(detLinea);
+          }
+        }
+      }
+    }
+
+    if (linea.productos?.length) {
+      for (const producto of linea.productos) {
+        producto.estado = parseInt(estado as any);
+        await this.productoRepository.save(producto);
+      }
+    }
+
+    return linea;
   }
 }

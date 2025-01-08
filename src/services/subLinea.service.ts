@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
@@ -18,8 +18,13 @@ export class SubLineaServices {
 
     @InjectRepository(Linea)
     private lineaRepository: Repository<Linea>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.subLineaRepository);
+    this.estadoService = new EstadoService(
+      this.subLineaRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.subLineaRepository);
   }
 

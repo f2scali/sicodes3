@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductosController } from 'src/controllers/producto.controller';
 import { Criterio } from 'src/entities/criterio.entity';
+import { DetalleListaPrecios } from 'src/entities/detListaPrecio.entity';
 import { Linea } from 'src/entities/linea.entity';
 import { Producto } from 'src/entities/producto.entity';
 import { TipoInventario } from 'src/entities/tipoInventario.entity';
@@ -19,6 +20,7 @@ import { ProductoServices } from 'src/services/producto.service';
       Linea,
       UnidadMed,
       Criterio,
+      DetalleListaPrecios,
     ]),
   ],
   controllers: [ProductosController],

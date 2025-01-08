@@ -4,8 +4,10 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Linea } from './linea.entity';
+import { DetLineas } from './detLinea.entity';
 
 @Entity('tbl_Sublinea')
 export class Sublinea {
@@ -23,4 +25,7 @@ export class Sublinea {
   @ManyToOne(() => Linea, (linea) => linea.id)
   @JoinColumn({ name: 'id_linea' })
   linea: Linea;
+
+  @OneToMany(() => DetLineas, (detLinea) => detLinea.sublinea)
+  detLineas: DetLineas[];
 }

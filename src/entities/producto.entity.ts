@@ -5,11 +5,13 @@ import {
   ManyToOne,
   JoinColumn,
   Unique,
+  OneToMany,
 } from 'typeorm';
 import { TipoInventario } from './tipoInventario.entity';
 import { UnidadMed } from './unidadMed.entity';
 import { Criterio } from './criterio.entity';
 import { Linea } from './linea.entity';
+import { DetalleListaPrecios } from './detListaPrecio.entity';
 
 @Entity('tbl_producto')
 @Unique(['id_item', 'id_ext_item'])
@@ -72,4 +74,11 @@ export class Producto {
   @ManyToOne(() => Criterio, (criterio) => criterio.id)
   @JoinColumn({ name: 'id_cricla1' })
   criterio: Criterio;
+
+  @OneToMany(
+    () => DetalleListaPrecios,
+    (detalleListaPrecio) => detalleListaPrecio.producto,
+    { eager: true },
+  )
+  detalleListasPrecios: DetalleListaPrecios[];
 }

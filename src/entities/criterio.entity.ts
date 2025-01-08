@@ -4,8 +4,10 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { TipoInventario } from './tipoInventario.entity';
+import { Producto } from './producto.entity';
 
 @Entity('tbl_Criterio')
 export class Criterio {
@@ -26,4 +28,7 @@ export class Criterio {
   @ManyToOne(() => TipoInventario, (tipo) => tipo.id)
   @JoinColumn({ name: 'id_tipo_inv' })
   tipoInventario: TipoInventario;
+
+  @OneToMany(() => Producto, (producto) => producto.criterio, { eager: true })
+  productos: Producto[];
 }

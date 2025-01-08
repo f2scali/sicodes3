@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { Criterio } from 'src/entities/criterio.entity';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { QueryService } from './query.service';
 import { CreateCriterioDTO } from 'src/DTOs/criterio.dto';
 import { TipoInventario } from 'src/entities/tipoInventario.entity';
+import { Producto } from 'src/entities/producto.entity';
 
 @Injectable()
 export class CriterioServices {
@@ -18,8 +19,15 @@ export class CriterioServices {
     private criterioRepository: Repository<Criterio>,
     @InjectRepository(TipoInventario)
     private tipoInventarioRepository: Repository<TipoInventario>,
+
+    @InjectRepository(Producto)
+    private productoRepository: Repository<Producto>,
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.criterioRepository);
+    this.estadoService = new EstadoService(
+      this.criterioRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.criterioRepository);
   }
 
@@ -74,6 +82,25 @@ export class CriterioServices {
     return this.criterioRepository.save(updatedCriterio);
   }
   async cambiarEstado(id: number, estado: number): Promise<Criterio> {
-    return this.estadoService.cambiarEstado('id', id, estado);
+    const criterio = await this.criterioRepository.findOne({
+      where: { id },
+      relations: ['productos'],
+    });
+
+    if (!criterio) {
+      throw new NotFoundException(`No se encontró el criterio con id ${id}`);
+    }
+
+    criterio.estado = parseInt(estado as any);
+    await this.criterioRepository.save(criterio);
+
+    if (criterio.productos?.length) {
+      for (const producto of criterio.productos) {
+        producto.estado = parseInt(estado as any);
+        await this.productoRepository.save(producto);
+      }
+    }
+
+    return criterio;
   }
 }

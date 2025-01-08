@@ -1,11 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ListaPrecios } from 'src/entities/listaPrecios.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { CreateListaPreciosDTO } from 'src/DTOs/listaPrecios.dto';
+import { DetalleListaPrecios } from 'src/entities/detListaPrecio.entity';
+import { Producto } from 'src/entities/producto.entity';
 
 @Injectable()
 export class ListaPreciosServices {
@@ -14,8 +21,16 @@ export class ListaPreciosServices {
   constructor(
     @InjectRepository(ListaPrecios)
     private listaPreciosRepository: Repository<ListaPrecios>,
+
+    @InjectRepository(DetalleListaPrecios)
+    private readonly detListaPrecioRepository: Repository<DetalleListaPrecios>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.listaPreciosRepository);
+    this.estadoService = new EstadoService(
+      this.listaPreciosRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.listaPreciosRepository);
   }
 
@@ -58,6 +73,25 @@ export class ListaPreciosServices {
   }
 
   async cambiarEstado(id: number, estado: number): Promise<ListaPrecios> {
-    return this.estadoService.cambiarEstado('id', id, estado);
+    const lista = await this.listaPreciosRepository.findOne({
+      where: { id },
+      relations: ['listasDePrecio'],
+    });
+
+    if (!lista) {
+      throw new NotFoundException(`linea with ID ${id} not found`);
+    }
+
+    lista.estado = parseInt(estado as any);
+    await this.listaPreciosRepository.save(lista);
+
+    if (lista.listasDePrecio?.length) {
+      for (const detListaPrecio of lista.listasDePrecio) {
+        detListaPrecio.estado = parseInt(estado as any);
+        await this.detListaPrecioRepository.save(detListaPrecio);
+      }
+    }
+
+    return lista;
   }
 }

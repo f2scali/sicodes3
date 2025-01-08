@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TipoCliente } from 'src/entities/tipoCliente.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
@@ -14,8 +14,13 @@ export class TipoClienteServices {
   constructor(
     @InjectRepository(TipoCliente)
     private tipoClienteRepository: Repository<TipoCliente>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.tipoClienteRepository);
+    this.estadoService = new EstadoService(
+      this.tipoClienteRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.tipoClienteRepository);
   }
 

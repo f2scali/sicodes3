@@ -1,4 +1,12 @@
-import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
+import { DetalleListaPrecios } from './detListaPrecio.entity';
+import { Producto } from './producto.entity';
 
 @Entity('tbl_Lista_Precios')
 export class ListaPrecios {
@@ -13,4 +21,7 @@ export class ListaPrecios {
 
   @Column({ default: 1 })
   estado: number;
+
+  @OneToMany(() => DetalleListaPrecios, (detLista) => detLista.listaPrecios)
+  listasDePrecio: DetalleListaPrecios[];
 }

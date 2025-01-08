@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from 'src/entities/usuario.entity';
 import { Vendedor } from 'src/entities/vendedor.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
@@ -23,8 +23,13 @@ export class VendedorServices {
 
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.vendedorRepository);
+    this.estadoService = new EstadoService(
+      this.vendedorRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.vendedorRepository);
   }
 

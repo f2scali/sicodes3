@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DetalleListaPrecios } from 'src/entities/detListaPrecio.entity';
 import { ListaPrecios } from 'src/entities/listaPrecios.entity';
 import { Producto } from 'src/entities/producto.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
@@ -27,8 +27,13 @@ export class DetListaPrecioServices {
 
     @InjectRepository(ListaPrecios)
     private listaPreciosRepository: Repository<ListaPrecios>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.detalleListaPrecioRepository);
+    this.estadoService = new EstadoService(
+      this.detalleListaPrecioRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.detalleListaPrecioRepository);
   }
 
@@ -153,7 +158,9 @@ export class DetListaPrecioServices {
       );
     }
 
-    result.estado = estado;
+    result.estado = parseInt(estado as any);
+    await this.detalleListaPrecioRepository.save(result);
+
     return this.detalleListaPrecioRepository.save(result);
   }
 }

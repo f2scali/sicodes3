@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from 'src/entities/usuario.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
@@ -18,8 +18,13 @@ export class UsuariosServices {
     private usuariosRepository: Repository<Usuario>,
     @InjectRepository(Roles)
     private rolesRepository: Repository<Roles>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.usuariosRepository);
+    this.estadoService = new EstadoService(
+      this.usuariosRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.usuariosRepository);
   }
 

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DetLineas } from 'src/entities/detLinea.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
@@ -18,8 +18,13 @@ export class DetLineaServices {
 
     @InjectRepository(Sublinea)
     private sublineaRepository: Repository<Sublinea>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.detLineaRepository);
+    this.estadoService = new EstadoService(
+      this.detLineaRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.detLineaRepository);
   }
 

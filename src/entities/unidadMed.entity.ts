@@ -4,8 +4,10 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { TipoInventario } from './tipoInventario.entity';
+import { Producto } from './producto.entity';
 
 @Entity('tbl_Unidad_Med')
 export class UnidadMed {
@@ -27,4 +29,7 @@ export class UnidadMed {
   @ManyToOne(() => TipoInventario, (tipo) => tipo.id)
   @JoinColumn({ name: 'id_tipo_inv' })
   tipoInventario: TipoInventario;
+
+  @OneToMany(() => Producto, (producto) => producto.unidadMed)
+  productos: Producto[];
 }

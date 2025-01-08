@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Producto } from 'src/entities/producto.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
@@ -15,6 +15,7 @@ import { TipoInventario } from 'src/entities/tipoInventario.entity';
 import { Linea } from 'src/entities/linea.entity';
 import { UnidadMed } from 'src/entities/unidadMed.entity';
 import { Criterio } from 'src/entities/criterio.entity';
+import { DetalleListaPrecios } from 'src/entities/detListaPrecio.entity';
 
 @Injectable()
 export class ProductoServices {
@@ -33,10 +34,15 @@ export class ProductoServices {
     @InjectRepository(UnidadMed)
     private unidadMedRepository: Repository<UnidadMed>,
 
-    @InjectRepository(Criterio)
-    private criterioRepository: Repository<Criterio>,
+    @InjectRepository(DetalleListaPrecios)
+    private detalleListaPrecioRepository: Repository<DetalleListaPrecios>,
+
+    private readonly entityManager: EntityManager,
   ) {
-    this.estadoService = new EstadoService(this.productoRepository);
+    this.estadoService = new EstadoService(
+      this.productoRepository,
+      this.entityManager,
+    );
     this.queryService = new QueryService(this.productoRepository);
   }
 
@@ -125,6 +131,25 @@ export class ProductoServices {
     return this.productoRepository.save(updatedProducto);
   }
   async cambiarEstado(id: number, estado: number): Promise<Producto> {
-    return this.estadoService.cambiarEstado('id', id, estado);
+    const producto = await this.productoRepository.findOne({
+      where: { id },
+      relations: ['detalleListasPrecios'],
+    });
+
+    if (!producto) {
+      throw new NotFoundException(`No se encontró el criterio con id ${id}`);
+    }
+
+    producto.estado = parseInt(estado as any);
+    await this.productoRepository.save(producto);
+
+    if (producto.detalleListasPrecios?.length) {
+      for (const detalleListaPrecios of producto.detalleListasPrecios) {
+        detalleListaPrecios.estado = parseInt(estado as any);
+        await this.detalleListaPrecioRepository.save(detalleListaPrecios);
+      }
+    }
+
+    return producto;
   }
 }
