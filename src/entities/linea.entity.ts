@@ -16,7 +16,7 @@ export class Linea {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true, nullable: true })
   codLinea: string;
   @Column()
   detalle: string;

@@ -1,8 +1,14 @@
-import { IsNotEmpty, IsNumber, IsString, Validate } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Validate,
+} from 'class-validator';
 import { IsUnique } from 'src/validators/isUnique-validator';
 
 export class CreateLineaDTO {
-  @IsNotEmpty({ message: 'Este campo es requerido' })
+  @IsOptional()
   @IsString()
   @Validate(IsUnique, ['Linea', 'codLinea'])
   codLinea: string;
