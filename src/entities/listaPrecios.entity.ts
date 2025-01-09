@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { DetalleListaPrecios } from './detListaPrecio.entity';
 import { Producto } from './producto.entity';
+import { Cliente } from './cliente.entity';
 
 @Entity('tbl_Lista_Precios')
 export class ListaPrecios {
@@ -24,4 +25,7 @@ export class ListaPrecios {
 
   @OneToMany(() => DetalleListaPrecios, (detLista) => detLista.listaPrecios)
   listasDePrecio: DetalleListaPrecios[];
+
+  @OneToMany(() => Cliente, (cliente) => cliente.listaPrecios)
+  clientes: Cliente[];
 }

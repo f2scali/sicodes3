@@ -41,6 +41,11 @@ export class UsuariosController {
     return await this.usuariosService.findAllActivos();
   }
 
+  @Get('vendedores')
+  async findAllVendedores(): Promise<Usuario[]> {
+    return await this.usuariosService.findAllVendedoresActivos();
+  }
+
   @Get(':id')
   async getUsuario(@Param('id') id: number): Promise<Usuario> {
     const usuario = await this.usuariosService.findOne(id);

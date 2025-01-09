@@ -12,6 +12,7 @@ import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { CreateVendedorDTO } from 'src/DTOs/vendedor.dto';
+import { Cliente } from 'src/entities/cliente.entity';
 
 @Injectable()
 export class VendedorServices {
@@ -24,6 +25,8 @@ export class VendedorServices {
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
 
+    @InjectRepository(Cliente)
+    private readonly clienteRepository: Repository<Cliente>,
     private readonly entityManager: EntityManager,
   ) {
     this.estadoService = new EstadoService(
@@ -34,9 +37,7 @@ export class VendedorServices {
   }
 
   findAllActivos(): Promise<Vendedor[]> {
-    return this.estadoService.findAllActivos({
-      where: { usuario: { estado: 1 } },
-    });
+    return this.estadoService.findAllActivos();
   }
 
   async findVendedorWithQuery(
@@ -104,20 +105,23 @@ export class VendedorServices {
   }
 
   async cambiarEstado(id: number, estado: number): Promise<Vendedor> {
-    const result = await this.vendedorRepository.findOne({
+    const vendedor = await this.vendedorRepository.findOne({
       where: { id },
-      relations: ['usuario'],
+      relations: ['usuario', 'clientes'],
     });
-    if (!result) {
+    if (!vendedor) {
       throw new NotFoundException('No se encontró el vendedor');
     }
+    vendedor.estado = parseInt(estado as any);
+    await this.vendedorRepository.save(vendedor);
 
-    if (result.usuario.estado === 1) {
-      throw new HttpException(
-        `No se puede inactivar el vendedor.`,
-        HttpStatus.BAD_REQUEST,
-      );
+    if (vendedor.clientes?.length) {
+      for (const cliente of vendedor.clientes) {
+        cliente.estado = parseInt(estado as any);
+        await this.clienteRepository.save(cliente);
+      }
     }
-    return this.estadoService.cambiarEstado('id', id, estado);
+
+    return vendedor;
   }
 }

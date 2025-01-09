@@ -32,6 +32,12 @@ export class UsuariosServices {
     return this.estadoService.findAllActivos();
   }
 
+  findAllVendedoresActivos = async (): Promise<Usuario[]> => {
+    return this.usuariosRepository.find({
+      where: { estado: 1, rol: { id: 2 } },
+      relations: ['rol'],
+    });
+  };
   async findUsuarioWithQuery(
     query: QueryDTO,
   ): Promise<{ data: Usuario[]; total: number }> {

@@ -3,11 +3,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Vendedor } from './vendedor.entity';
 import { TipoCliente } from './tipoCliente.entity';
 import { ListaPrecios } from './listaPrecios.entity';
+import { Sucursal } from './sucursal.entity';
 
 @Entity('tbl_Clientes')
 export class Cliente {
@@ -49,4 +51,7 @@ export class Cliente {
   })
   @JoinColumn({ name: 'id_Lista_Precio' })
   listaPrecios: ListaPrecios;
+
+  @OneToMany(() => Sucursal, (sucursal) => sucursal.cliente)
+  sucursales: Sucursal[];
 }

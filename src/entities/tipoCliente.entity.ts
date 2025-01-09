@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Cliente } from './cliente.entity';
 
 @Entity('tbl_Tipo_Clientes')
 export class TipoCliente {
@@ -13,4 +14,7 @@ export class TipoCliente {
 
   @Column({ default: 1 })
   estado: number;
+
+  @OneToMany(() => Cliente, (cliente) => cliente.tipoCliente)
+  clientes: Cliente[];
 }

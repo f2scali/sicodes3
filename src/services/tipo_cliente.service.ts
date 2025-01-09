@@ -6,6 +6,7 @@ import { EstadoService } from './estado.service';
 import { QueryService } from './query.service';
 import { QueryDTO } from 'src/DTOs/query.dto';
 import { CreateTipoClienteDTO } from 'src/DTOs/tipoCliente.dto';
+import { Cliente } from 'src/entities/cliente.entity';
 
 @Injectable()
 export class TipoClienteServices {
@@ -15,6 +16,8 @@ export class TipoClienteServices {
     @InjectRepository(TipoCliente)
     private tipoClienteRepository: Repository<TipoCliente>,
 
+    @InjectRepository(Cliente)
+    private clienteRepository: Repository<Cliente>,
     private readonly entityManager: EntityManager,
   ) {
     this.estadoService = new EstadoService(
@@ -65,6 +68,27 @@ export class TipoClienteServices {
   }
 
   async cambiarEstado(id: number, estado: number): Promise<TipoCliente> {
-    return this.estadoService.cambiarEstado('id', id, estado);
+    const tipoCliente = await this.tipoClienteRepository.findOne({
+      where: { id },
+      relations: ['clientes'],
+    });
+
+    tipoCliente.estado = parseInt(estado as any);
+    await this.tipoClienteRepository.save(tipoCliente);
+    if (!tipoCliente) {
+      throw new HttpException(
+        'Tipo de cliente no encontrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (tipoCliente.clientes?.length) {
+      for (const cliente of tipoCliente.clientes) {
+        cliente.estado = parseInt(estado as any);
+        await this.clienteRepository.save(cliente);
+      }
+
+      return tipoCliente;
+    }
   }
 }

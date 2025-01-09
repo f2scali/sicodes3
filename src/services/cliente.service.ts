@@ -14,6 +14,7 @@ import { CreateClienteDTO } from 'src/DTOs/cliente.dto';
 import { Vendedor } from 'src/entities/vendedor.entity';
 import { TipoCliente } from 'src/entities/tipoCliente.entity';
 import { ListaPrecios } from 'src/entities/listaPrecios.entity';
+import { Sucursal } from 'src/entities/sucursal.entity';
 
 @Injectable()
 export class ClientesServices {
@@ -28,6 +29,8 @@ export class ClientesServices {
     private readonly tipoClienteRepository: Repository<TipoCliente>,
     @InjectRepository(ListaPrecios)
     private readonly listaPreciosRepository: Repository<ListaPrecios>,
+    @InjectRepository(Sucursal)
+    private readonly sucursalRepository: Repository<Sucursal>,
     private readonly entityManager: EntityManager,
   ) {
     this.estadoService = new EstadoService(
@@ -118,15 +121,24 @@ export class ClientesServices {
   }
 
   async cambiarEstado(id: number, estado: number): Promise<Cliente> {
-    const result = await this.clientesRepository.findOne({
+    const cliente = await this.clientesRepository.findOne({
       where: { id },
-      relations: ['vendedor', 'listaPrecios', 'tipoCliente'],
+      relations: ['vendedor', 'listaPrecios', 'tipoCliente', 'sucursales'],
     });
 
-    if (!result) {
+    if (!cliente) {
       throw new NotFoundException(`No se encontró el cliente `);
     }
 
-    return this.estadoService.cambiarEstado('id', id, estado);
+    cliente.estado = parseInt(estado as any);
+    await this.clientesRepository.save(cliente);
+
+    if (cliente.sucursales?.length) {
+      for (const sucursal of cliente.sucursales) {
+        sucursal.estado = parseInt(estado as any);
+        await this.sucursalRepository.save(sucursal);
+      }
+    }
+    return cliente;
   }
 }

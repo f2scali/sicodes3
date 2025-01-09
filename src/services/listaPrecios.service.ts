@@ -13,6 +13,7 @@ import { QueryDTO } from 'src/DTOs/query.dto';
 import { CreateListaPreciosDTO } from 'src/DTOs/listaPrecios.dto';
 import { DetalleListaPrecios } from 'src/entities/detListaPrecio.entity';
 import { Producto } from 'src/entities/producto.entity';
+import { Cliente } from 'src/entities/cliente.entity';
 
 @Injectable()
 export class ListaPreciosServices {
@@ -25,6 +26,8 @@ export class ListaPreciosServices {
     @InjectRepository(DetalleListaPrecios)
     private readonly detListaPrecioRepository: Repository<DetalleListaPrecios>,
 
+    @InjectRepository(Cliente)
+    private readonly clienteRepository: Repository<Cliente>,
     private readonly entityManager: EntityManager,
   ) {
     this.estadoService = new EstadoService(
@@ -75,7 +78,7 @@ export class ListaPreciosServices {
   async cambiarEstado(id: number, estado: number): Promise<ListaPrecios> {
     const lista = await this.listaPreciosRepository.findOne({
       where: { id },
-      relations: ['listasDePrecio'],
+      relations: ['listasDePrecio', 'clientes'],
     });
 
     if (!lista) {
@@ -89,6 +92,13 @@ export class ListaPreciosServices {
       for (const detListaPrecio of lista.listasDePrecio) {
         detListaPrecio.estado = parseInt(estado as any);
         await this.detListaPrecioRepository.save(detListaPrecio);
+      }
+    }
+
+    if (lista.clientes?.length) {
+      for (const cliente of lista.clientes) {
+        cliente.estado = parseInt(estado as any);
+        await this.clienteRepository.save(cliente);
       }
     }
 
