@@ -29,6 +29,6 @@ export class Criterio {
   @JoinColumn({ name: 'id_tipo_inv' })
   tipoInventario: TipoInventario;
 
-  @OneToMany(() => Producto, (producto) => producto.criterio, { eager: true })
+  @OneToMany(() => Producto, (producto) => producto.criterio)
   productos: Producto[];
 }

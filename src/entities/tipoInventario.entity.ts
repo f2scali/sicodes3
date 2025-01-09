@@ -23,21 +23,15 @@ export class TipoInventario {
   @Column({ default: 1 })
   estado: number;
 
-  @OneToMany(() => Linea, (linea) => linea.tipoInventario, { eager: true })
+  @OneToMany(() => Linea, (linea) => linea.tipoInventario)
   lineas: Linea[];
 
-  @OneToMany(() => Criterio, (criterio) => criterio.tipoInventario, {
-    eager: true,
-  })
+  @OneToMany(() => Criterio, (criterio) => criterio.tipoInventario)
   criterios: Criterio[];
 
-  @OneToMany(() => UnidadMed, (unidadMed) => unidadMed.tipoInventario, {
-    eager: true,
-  })
+  @OneToMany(() => UnidadMed, (unidadMed) => unidadMed.tipoInventario)
   unidadMeds: UnidadMed[];
 
-  @OneToMany(() => Producto, (producto) => producto.tipoInventario, {
-    eager: true,
-  })
+  @OneToMany(() => Producto, (producto) => producto.tipoInventario)
   productos: Producto[];
 }

@@ -78,7 +78,6 @@ export class Producto {
   @OneToMany(
     () => DetalleListaPrecios,
     (detalleListaPrecio) => detalleListaPrecio.producto,
-    { eager: true },
   )
   detalleListasPrecios: DetalleListaPrecios[];
 }
