@@ -6,6 +6,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import * as dotenv from 'dotenv';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { BlacklistedToken } from 'src/entities/blackListToken.entity';
+import { TokenBlacklistService } from 'src/services/token-blacklist.service';
 dotenv.config();
 @Module({
   imports: [
@@ -13,10 +16,15 @@ dotenv.config();
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '3h' },
     }),
+    TypeOrmModule.forFeature([BlacklistedToken]),
   ],
-  providers: [AuthService, { provide: APP_GUARD, useClass: AuthGuard }],
+  providers: [
+    AuthService,
+    { provide: APP_GUARD, useClass: AuthGuard },
+    TokenBlacklistService,
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })

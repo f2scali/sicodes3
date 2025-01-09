@@ -2,11 +2,13 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsuariosServices } from './usuario.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { TokenBlacklistService } from './token-blacklist.service';
 @Injectable()
 export class AuthService {
   constructor(
     private usuarioService: UsuariosServices,
     private jwtService: JwtService,
+    private blackListService: TokenBlacklistService,
   ) {}
 
   async signIn(
@@ -22,7 +24,7 @@ export class AuthService {
     const isPasswordValid = await this.validatePassword(pass, user?.contraseña);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Contraseña incorrecta');
+      throw new UnauthorizedException('Valores incorrectos');
     }
 
     const payload = { username: user.usuario };
@@ -35,5 +37,9 @@ export class AuthService {
     hashedPassword: string,
   ): Promise<boolean> {
     return bcrypt.compare(plainPassword, hashedPassword);
+  }
+
+  async logout(token: string): Promise<void> {
+    await this.blackListService.add(token);
   }
 }
