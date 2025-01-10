@@ -14,7 +14,7 @@ export class ListaPrecios {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ nullable: true })
   codLista: string;
 
   @Column()

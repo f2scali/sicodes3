@@ -6,7 +6,7 @@ export class TipoCliente {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ nullable: true })
   codTipoCliente: string;
 
   @Column()

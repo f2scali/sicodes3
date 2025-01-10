@@ -60,6 +60,18 @@ export class TipoClienteServices {
       );
     }
 
+    if (data.codTipoCliente) {
+      const existing = await this.tipoClienteRepository.findOneBy({
+        codTipoCliente: data.codTipoCliente,
+      });
+
+      if (existing && existing.id !== id) {
+        throw new HttpException(
+          'El código ya está en uso',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
     const updatedTipoCliente = this.tipoClienteRepository.merge(
       tipoCliente,
       data,

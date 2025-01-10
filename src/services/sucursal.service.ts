@@ -77,6 +77,19 @@ export class SucursalServices {
       }
       sucursal.cliente = cliente;
     }
+
+    if (data.codSucursal) {
+      const existing = await this.sucursalRepository.findOneBy({
+        codSucursal: data.codSucursal,
+      });
+
+      if (existing && existing.id !== id) {
+        throw new HttpException(
+          'El código ya está en uso',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
     const updatedSucursal = this.sucursalRepository.merge(sucursal, data);
     return this.sucursalRepository.save(updatedSucursal);
   }

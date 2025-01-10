@@ -13,7 +13,7 @@ export class DetLineas {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ nullable: true })
   codDetLinea: string;
 
   @Column()

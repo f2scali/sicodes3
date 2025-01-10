@@ -130,6 +130,18 @@ export class DetListaPrecioServices {
       detalleListaPrecios.listaPrecios = listaPrecio;
     }
 
+    if (data.cod_ListaPrecio) {
+      const existing = await this.detalleListaPrecioRepository.findOneBy({
+        cod_ListaPrecio: data.cod_ListaPrecio,
+      });
+
+      if (existing && existing.id !== id) {
+        throw new HttpException(
+          'El código ya está en uso',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
     const updatedDetalleListaPrecios = this.detalleListaPrecioRepository.merge(
       detalleListaPrecios,
       data,

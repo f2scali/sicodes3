@@ -156,5 +156,5 @@ export class EstadoService {
         relations: relaciones.map((r) => r.relationName),
       });
     });
-  }
+  } //en desuso
 }

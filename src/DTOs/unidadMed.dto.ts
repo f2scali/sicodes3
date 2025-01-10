@@ -1,8 +1,14 @@
-import { IsNotEmpty, IsNumber, IsString, Validate } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Validate,
+} from 'class-validator';
 import { IsUnique } from 'src/validators/isUnique-validator';
 
 export class CreateUnidadMedDTO {
-  @IsNotEmpty({ message: 'El ID es requerido' })
+  @IsOptional()
   @IsString()
   @Validate(IsUnique, ['UnidadMed', 'codUnidadMed'])
   codUnidadMed: string;

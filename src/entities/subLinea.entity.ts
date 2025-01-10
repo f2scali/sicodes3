@@ -13,7 +13,7 @@ import { DetLineas } from './detLinea.entity';
 export class Sublinea {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
   codSublinea: string;
   @Column()
   detalle: string;

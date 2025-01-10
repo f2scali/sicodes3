@@ -116,6 +116,18 @@ export class ClientesServices {
       throw new NotFoundException(`No se encontró el cliente con id ${id}`);
     }
 
+    if (data.NIT) {
+      const existing = await this.clientesRepository.findOneBy({
+        NIT: data.NIT,
+      });
+
+      if (existing && existing.id !== id) {
+        throw new HttpException(
+          'El NIT ya está en uso',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
     const updatedCliente = this.clientesRepository.merge(cliente, data);
     return this.clientesRepository.save(updatedCliente);
   }

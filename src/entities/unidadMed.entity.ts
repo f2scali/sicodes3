@@ -14,7 +14,7 @@ export class UnidadMed {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   codUnidadMed: string;
 
   @Column()

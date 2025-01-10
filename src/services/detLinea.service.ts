@@ -72,6 +72,19 @@ export class DetLineaServices {
 
       detLinea.sublinea = sublinea;
     }
+
+    if (data.codDetLinea) {
+      const existing = await this.detLineaRepository.findOneBy({
+        codDetLinea: data.codDetLinea,
+      });
+
+      if (existing && existing.id !== id) {
+        throw new HttpException(
+          'El código ya está en uso',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
     const updateListaPrecio = this.detLineaRepository.merge(detLinea, data);
     return this.detLineaRepository.save(updateListaPrecio);
   }
