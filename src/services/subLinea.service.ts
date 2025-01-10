@@ -64,19 +64,6 @@ export class SubLineaServices {
       sublinea.linea = linea;
     }
 
-    if (data.codSublinea) {
-      const existing = await this.subLineaRepository.findOneBy({
-        codSublinea: data.codSublinea,
-      });
-
-      if (existing && existing.id !== id) {
-        throw new HttpException(
-          'El código ya está en uso',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
-
     const updateListaPrecio = this.subLineaRepository.merge(sublinea, data);
     return this.subLineaRepository.save(updateListaPrecio);
   }

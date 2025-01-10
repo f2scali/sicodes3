@@ -83,18 +83,6 @@ export class CriterioServices {
       throw new NotFoundException(`No se encontró el cliente con id ${id}`);
     }
 
-    if (data.codCriterio) {
-      const existing = await this.criterioRepository.findOneBy({
-        codCriterio: data.codCriterio,
-      });
-
-      if (existing && existing.id !== id) {
-        throw new HttpException(
-          'El código ya está en uso',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
     const updatedCriterio = this.criterioRepository.merge(criterio, data);
     return this.criterioRepository.save(updatedCriterio);
   }

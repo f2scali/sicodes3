@@ -86,18 +86,6 @@ export class TipoInventarioServices {
       );
     }
 
-    if (data.codInventario) {
-      const existing = await this.tipoInventarioRepository.findOneBy({
-        codInventario: data.codInventario,
-      });
-
-      if (existing && existing.id !== id) {
-        throw new HttpException(
-          'El código ya está en uso',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
     const updatedTipoInventario = this.tipoInventarioRepository.merge(
       tipoInventario,
       data,

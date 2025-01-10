@@ -69,18 +69,6 @@ export class ListaPreciosServices {
       );
     }
 
-    if (data.codLista) {
-      const existing = await this.listaPreciosRepository.findOneBy({
-        codLista: data.codLista,
-      });
-
-      if (existing && existing.id !== id) {
-        throw new HttpException(
-          'El código ya está en uso',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
     const updateListaPrecio = this.listaPreciosRepository.merge(
       listaPrecios,
       data,

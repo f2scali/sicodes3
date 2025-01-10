@@ -62,16 +62,6 @@ export class PptoServices {
       relations: ['vendedor'],
     });
 
-    if (data.id_Vendedor) {
-      const vendedor = await this.vendedorRepository.findOne({
-        where: { id: data.id_Vendedor },
-      });
-      if (!vendedor) {
-        throw new NotFoundException(`No se encontró el vendedor`);
-      }
-      presupuesto.vendedor = vendedor;
-    }
-
     if (!presupuesto) {
       throw new NotFoundException(`No se encontró el presupuesto`);
     }

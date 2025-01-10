@@ -84,18 +84,7 @@ export class UnidadMedServices {
         `No se encontró la unidad de medida con id ${id}`,
       );
     }
-    if (data.codUnidadMed) {
-      const existing = await this.unidadMedRepository.findOneBy({
-        codUnidadMed: data.codUnidadMed,
-      });
 
-      if (existing && existing.id !== id) {
-        throw new HttpException(
-          'El código ya está en uso',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
     const updatedUnidadMed = this.unidadMedRepository.merge(unidadMed, data);
     return this.unidadMedRepository.save(updatedUnidadMed);
   }

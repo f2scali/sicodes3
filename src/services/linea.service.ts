@@ -91,19 +91,6 @@ export class LineaServices {
     if (!linea) {
       throw new NotFoundException(`No se encontró el cliente con id ${id}`);
     }
-
-    if (data.codLinea) {
-      const existing = await this.lineaRepository.findOneBy({
-        codLinea: data.codLinea,
-      });
-
-      if (existing && existing.id !== id) {
-        throw new HttpException(
-          'El código ya está en uso',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
     const updatedLinea = this.lineaRepository.merge(linea, data);
     return this.lineaRepository.save(updatedLinea);
   }

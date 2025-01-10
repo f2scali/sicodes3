@@ -104,16 +104,6 @@ export class ProductoServices {
       producto.tipoInventario = tipoInventario;
     }
 
-    if (data.id_linea) {
-      const linea = await this.lineaRepository.findOne({
-        where: { id: data.id_linea },
-      });
-      if (!linea) {
-        throw new NotFoundException(`No se encontró la linea`);
-      }
-      producto.linea = linea;
-    }
-
     if (data.unimed_inv_1) {
       const unidadMed = await this.unidadMedRepository.findOne({
         where: { id: data.unimed_inv_1 },
