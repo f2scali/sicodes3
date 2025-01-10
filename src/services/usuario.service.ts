@@ -52,7 +52,10 @@ export class UsuariosServices {
   }
 
   findByUsername(usuario: string): Promise<Usuario | undefined> {
-    return this.usuariosRepository.findOneBy({ usuario });
+    return this.usuariosRepository.findOne({
+      where: { usuario },
+      relations: ['rol'],
+    });
   }
   async createUsuario(data: CreateUsuarioDTO): Promise<Usuario> {
     if (data.contraseña) {

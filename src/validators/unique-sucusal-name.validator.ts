@@ -18,16 +18,13 @@ export class UniqueSucursalNameConstraint
   constructor(
     @InjectRepository(Sucursal)
     private readonly sucursalRepository: Repository<Sucursal>,
-  ) {
-    console.log('Sucursal Repository:', this.sucursalRepository);
-  }
+  ) {}
 
   async validate(Detalle: string, args: ValidationArguments): Promise<boolean> {
     const id_Cliente = (args.object as any).id_Cliente;
     if (!id_Cliente) {
       return false;
     }
-    console.log(id_Cliente);
     const existingSucursal = await this.sucursalRepository.findOne({
       where: { Detalle, id_Cliente },
     });

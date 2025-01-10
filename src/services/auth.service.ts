@@ -14,7 +14,7 @@ export class AuthService {
   async signIn(
     usuario: string,
     pass: string,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; rolId: number }> {
     const user = await this.usuarioService.findByUsername(usuario);
 
     if (!user) {
@@ -28,8 +28,9 @@ export class AuthService {
     }
 
     const payload = { username: user.usuario };
+    const access_token = await this.jwtService.signAsync(payload);
 
-    return { access_token: await this.jwtService.signAsync(payload) };
+    return { access_token, rolId: user.rol.id };
   }
 
   async validatePassword(
